@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mehrad Faridan</title>
+<meta name="description" content="Mehrad Faridan builds mixed reality systems that help people teach and learn hands-on skills.">
+<meta property="og:title" content="Mehrad Faridan">
+<meta property="og:description" content="Mixed reality researcher building systems that help people teach and learn hands-on skills.">
+<meta property="og:type" content="website">
+<style>
+/* Layout: one quiet 720px column, Nandi-style: intro, news, work grouped by research theme, full list, background. Dark-first. */
+:root {
+  --bg: #12161b;
+  --surface: #1a2028;
+  --line: #2a323c;
+  --fg: #e6eaee;
+  --muted: #95a0ab;
+  --accent: #9cc7e8;
+  --accent-ink: #0e1a24;
+  --tag: #24303c;
+  --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f6f7f8; --surface: #eceff2; --line: #d6dce2; --fg: #161b21; --muted: #5d6874;
+    --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f6f7f8; --surface: #eceff2; --line: #d6dce2; --fg: #161b21; --muted: #5d6874;
+  --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font);
+  font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+.wrap { max-width: 720px; margin: 0 auto; }
+
+header.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-block: 18px; border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; text-decoration: none; }
+nav.menu { display: flex; gap: 6px; flex-wrap: wrap; }
+nav.menu a { text-decoration: none; font-size: 14px; color: var(--muted); padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; }
+nav.menu a:hover { color: var(--fg); border-color: var(--muted); }
+
+main { display: flex; flex-direction: column; gap: 64px; padding-block: 48px 40px; }
+h1 { font-size: clamp(30px, 5vw, 38px); line-height: 1.15; margin: 0 0 14px; letter-spacing: -0.01em; }
+h2 { font-size: 24px; margin: 0 0 20px; letter-spacing: -0.005em; text-wrap: balance; }
+h3 { font-size: 18px; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+
+.intro { display: grid; grid-template-columns: 148px 1fr; gap: 24px; align-items: start; }
+.intro-text { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.photo {
+  width: 148px; aspect-ratio: 1 / 1.15; max-width: 100%; border-radius: 8px;
+  background: repeating-linear-gradient(135deg, var(--surface) 0 10px, var(--tag) 10px 20px);
+  border: 1px dashed var(--line); display: grid; place-items: center; text-align: center;
+  color: var(--muted); font-size: 12px; padding: 8px;
+}
+.photo b { display: block; font-size: 28px; color: var(--fg); letter-spacing: 0.04em; }
+.looking { font-weight: 700; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 15px; color: var(--muted); }
+.links span { user-select: all; }
+
+.news { display: grid; grid-template-columns: 92px 1fr; gap: 10px 20px; font-size: 15px; }
+.news dt { color: var(--muted); font-variant-numeric: tabular-nums; }
+.news dd { margin: 0; }
+
+.lede { font-size: clamp(22px, 3.4vw, 28px); line-height: 1.25; font-weight: 700; margin: 0 0 36px; text-wrap: balance; }
+.lede em { font-style: normal; color: var(--accent); }
+.theme { display: flex; flex-direction: column; gap: 8px; }
+.theme + .theme { margin-top: 44px; }
+.theme > p { color: var(--muted); max-width: 62ch; }
+.projects { display: flex; flex-direction: column; gap: 26px; margin-top: 18px; }
+.project { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start; }
+.project > div { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.media {
+  width: 200px; max-width: 100%; aspect-ratio: 16 / 10; border-radius: 6px; border: 1px dashed var(--line);
+  background: repeating-linear-gradient(135deg, var(--surface) 0 10px, var(--tag) 10px 20px);
+  display: grid; place-items: center; color: var(--muted); font-size: 12px; text-align: center; padding: 8px;
+}
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.pill { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.project p { font-size: 15px; }
+.role { color: var(--muted); font-size: 14px; }
+
+.pubs { display: flex; flex-direction: column; gap: 18px; }
+.pub { display: grid; grid-template-columns: 44px 1fr; gap: 12px; font-size: 15px; }
+.pub .tag { font-family: var(--mono); font-size: 13px; color: var(--muted); padding-top: 2px; }
+.pub .t { font-weight: 700; display: block; }
+.pub .a { color: var(--muted); display: block; }
+.pub .a b { color: var(--fg); }
+.pub .v { color: var(--muted); font-size: 14px; }
+.note { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+.bg { display: flex; flex-direction: column; gap: 16px; }
+.bg-row { display: grid; grid-template-columns: 140px 1fr; gap: 20px; font-size: 15px; }
+.bg-row .when { color: var(--muted); font-variant-numeric: tabular-nums; }
+.bg-row .sub { color: var(--muted); display: block; }
+
+footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+
+@media (max-width: 600px) {
+  .intro { grid-template-columns: 1fr; }
+  .photo { width: 120px; }
+  .project { grid-template-columns: 1fr; }
+  .media { width: 100%; }
+  .news, .bg-row { grid-template-columns: 1fr; gap: 2px 0; }
+  .news dd { margin-bottom: 10px; }
+  nav.menu a { padding: 4px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; }
+section { scroll-margin-top: 80px; }
+</style>
+<style>body{margin:0} img{max-width:100%}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top">Mehrad Faridan</a>
+    <nav class="menu" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#publications">Publications</a>
+      <a href="#background">Background</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="intro" aria-label="About">
+      <div class="photo" role="img" aria-label="Headshot placeholder"><div><b>MF</b>photo coming soon</div></div>
+      <div class="intro-text">
+        <h1>Hi, I’m Mehrad.</h1>
+        <p>I’m a mixed reality researcher and engineer based in Calgary. I’m finishing my BSc in Computer Science at the <a href="https://ucalgary.ca">University of Calgary</a>, where I started doing research with Prof. Ryo Suzuki. Since then I’ve spent over four years as research lead for mixed reality at MaKami College, and a year as a visiting researcher with Prof. Hideaki Kuzuoka at the <a href="https://www.u-tokyo.ac.jp/en/">University of Tokyo</a>.</p>
+        <p>I build mixed reality systems that help people teach and learn physical, hands-on skills, especially at a distance. My work combines interaction techniques with live 3D capture, robots and haptics, and I test these systems with real instructors and learners.</p>
+        <p class="looking">I’m applying to MSc programs for Fall 2027, and I’m open to research and XR engineering roles.</p>
+        <div class="links">
+          <a href="https://scholar.google.ca/citations?user=amh7v2EAAAAJ&amp;hl=en">Google Scholar</a>
+          <a href="https://www.linkedin.com/in/mehrad-f-a34462164/">LinkedIn</a>
+          <a href="Mehrad_Faridan_CV.pdf">CV (PDF)</a>
+          <span>faridan3838@gmail.com</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="news-h">
+      <h2 id="news-h">News</h2>
+      <dl class="news">
+        <dt>Feb 2026</dt><dd>“Towards Scalable Remote Hands-on Education” accepted as a poster at Augmented Humans 2026.</dd>
+        <dt>2026</dt><dd>Scalable Academy at the IEEE VR 2026 workshop (VR-HSA).</dd>
+        <dt>Dec 2025</dt><dd>Wrapped up my year at the University of Tokyo’s Cyber Interface Lab.</dd>
+        <dt>Mar 2025</dt><dd>Video2MR published at IUI 2025.</dd>
+        <dt>Dec 2024</dt><dd>Started as a visiting researcher at the University of Tokyo with Prof. Hideaki Kuzuoka.</dd>
+        <dt>Jan 2024</dt><dd>PHINIX, the assistive wearable I worked on at Ximira, won PC Pro’s Best of CES 2024.</dd>
+      </dl>
+    </section>
+
+    <section id="work" aria-labelledby="work-h">
+      <h2 id="work-h">Selected work</h2>
+      <p class="lede">From watching an expert to <em>doing it with your own hands</em>.</p>
+
+      <div class="theme">
+        <h3>Teaching hands-on skills remotely</h3>
+        <p>Massage, physiotherapy and other hands-on trades are taught in person. These systems let an instructor see, guide and reach students who aren’t in the room.</p>
+        <div class="projects">
+          <article class="project">
+            <div class="media">ChameleonControl<br>video coming soon</div>
+            <div>
+              <div class="meta"><span>CHI 2023</span><span class="pill">First author</span></div>
+              <h3>ChameleonControl</h3>
+              <p>A remote instructor guides a real person in the classroom through mixed reality gestures, so that person’s hands carry out the instructor’s demonstration. Deployed in a physiotherapy classroom and evaluated with 53 participants across three studies.</p>
+            </div>
+          </article>
+          <article class="project">
+            <div class="media">Scalable Academy<br>video coming soon</div>
+            <div>
+              <div class="meta"><span>AHs 2026 · IEEE VR 2026 Workshop</span></div>
+              <h3>Scalable Academy</h3>
+              <p>A VR view that streams live 3D point clouds of up to six students at once. In a study with eight massage-therapy instructors, they projected that one instructor could watch over up to 15 students.</p>
+            </div>
+          </article>
+          <article class="project">
+            <div class="media">HoloBots<br>video coming soon</div>
+            <div>
+              <div class="meta"><span>UIST 2023</span></div>
+              <h3>HoloBots</h3>
+              <p>Mobile robots give a remote person’s hologram a physical presence, so collaborators in different places can touch and move the same real objects.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="theme">
+        <h3>Turning instructions into guidance</h3>
+        <p>Most how-to knowledge lives in flat videos and conversation. These projects bring it into the space where the work happens.</p>
+        <div class="projects">
+          <article class="project">
+            <div class="media">Video2MR<br>video coming soon</div>
+            <div>
+              <div class="meta"><span>IUI 2025</span></div>
+              <h3>Video2MR</h3>
+              <p>Extracts motion from ordinary 2D tutorial videos and turns it into 3D mixed reality instructions you can follow in your own space.</p>
+            </div>
+          </article>
+          <article class="project">
+            <div class="media">Sketched Reality<br>video coming soon</div>
+            <div>
+              <div class="meta"><span>UIST 2022</span></div>
+              <h3>Sketched Reality</h3>
+              <p>Sketch in AR to define how virtual objects and small tabletop robots affect each other, in both directions.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="theme">
+        <h3>Touch and haptics</h3>
+        <p>Feeling an interface, not just seeing it.</p>
+        <div class="projects">
+          <article class="project">
+            <div class="media">UltraBots<br>video coming soon</div>
+            <div>
+              <div class="meta"><span>UIST 2022 Student Innovation Contest</span><span class="pill">Honorable Mention</span></div>
+              <h3>UltraBots</h3>
+              <p>Robot-mounted ultrasound arrays move with you to deliver mid-air touch feedback across a large VR space.</p>
+            </div>
+          </article>
+          <article class="project">
+            <div class="media">PHINIX<br>photo coming soon</div>
+            <div>
+              <div class="meta"><span>Ximira · CES 2024</span><span class="pill">Best of CES 2024</span></div>
+              <h3>PHINIX</h3>
+              <p>An Intel-funded AI wearable that helps blind and low-vision people navigate, read text and recognize faces.</p>
+              <p class="role">My part: designed the audio and voice interface, wrote the module that prioritizes what the device tells the user, and prototyped parts for the haptic bracelet.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="publications" aria-labelledby="pubs-h">
+      <h2 id="pubs-h">Publications</h2>
+      <div class="pubs">
+        <div class="pub"><span class="tag">W.3</span><div><span class="t">Towards Scalable Remote Hands-on Education: Evaluating a Multi-Student Pointcloud Interface for Massage Therapy Education</span><span class="a"><b>Mehrad Faridan*</b>, Takashige Suzuki*, Takafumi Kanaya, Ryo Suzuki, Hideaki Kuzuoka</span><span class="v">AHs 2026 (Poster)</span></div></div>
+        <div class="pub"><span class="tag">W.2</span><div><span class="t">Scalable Academy: Pointcloud Interface for Remote Hands-on Classroom</span><span class="a"><b>Mehrad Faridan*</b>, Takashige Suzuki*, Takafumi Kanaya, Ryo Suzuki, Hideaki Kuzuoka</span><span class="v">IEEE VR 2026 Workshop (VR-HSA)</span></div></div>
+        <div class="pub"><span class="tag">C.4</span><div><span class="t">Video2MR: Automatically Generating Mixed Reality 3D Instructions by Augmenting Extracted Motion from 2D Videos</span><span class="a">Keiichi Ihara, Kyzyl Monteiro, <b>Mehrad Faridan</b>, Rubaiat Habib Kazi, Ryo Suzuki</span><span class="v">IUI 2025</span></div></div>
+        <div class="pub"><span class="tag">P.1</span><div><span class="t">Augmented Conversation with Embedded Speech-Driven On-the-Fly Referencing in AR</span><span class="a">Shivesh Singh Jadon, <b>Mehrad Faridan</b>, Edward Mah, Rajan Vaish, Wesley Willett, Ryo Suzuki</span><span class="v">arXiv preprint, 2024</span></div></div>
+        <div class="pub"><span class="tag">C.3</span><div><span class="t">ChameleonControl: Teleoperating Real Human Surrogates through Mixed Reality Gestural Guidance for Remote Hands-on Classrooms</span><span class="a"><b>Mehrad Faridan</b>, Bheesha Kumari, Ryo Suzuki</span><span class="v">CHI 2023</span></div></div>
+        <div class="pub"><span class="tag">C.2</span><div><span class="t">HoloBots: Augmenting Holographic Telepresence with Mobile Robots for Tangible Remote Collaboration in Mixed Reality</span><span class="a">Keiichi Ihara, <b>Mehrad Faridan</b>, Ayumi Ichikawa, Ikkaku Kawaguchi, Ryo Suzuki</span><span class="v">UIST 2023</span></div></div>
+        <div class="pub"><span class="tag">C.1</span><div><span class="t">Sketched Reality: Sketching Bi-Directional Interactions Between Virtual and Physical Worlds with AR and Actuated Tangible UI</span><span class="a">Hiroki Kaimoto, Kyzyl Monteiro, <b>Mehrad Faridan</b>, Jiatong Li, Samin Farajian, Yasuaki Kakehi, Ken Nakagaki, Ryo Suzuki</span><span class="v">UIST 2022</span></div></div>
+        <div class="pub"><span class="tag">W.1</span><div><span class="t">UltraBots: Large-Area Mid-Air Haptics for VR with Robotically Actuated Ultrasound Transducers</span><span class="a"><b>Mehrad Faridan</b>, Marcus Friedel, Ryo Suzuki</span><span class="v">UIST 2022 Student Innovation Contest (Honorable Mention)</span></div></div>
+      </div>
+      <p class="note">C = conference paper · W = workshop, poster or student competition · P = preprint · * = co-first authors</p>
+    </section>
+
+    <section id="background" aria-labelledby="bg-h">
+      <h2 id="bg-h">Background</h2>
+      <div class="bg">
+        <div class="bg-row"><span class="when">2022 – 2026</span><span>Mixed Reality Developer (Research Lead), MaKami College<span class="sub">Applied mixed reality research for hands-on training, with UCalgary, UTokyo, U Tsukuba, CU Boulder and Adobe Research</span></span></div>
+        <div class="bg-row"><span class="when">2024 – 2025</span><span>Embedded Visiting Researcher, University of Tokyo<span class="sub">Cyber Interface Lab, hosted by Prof. Hideaki Kuzuoka</span></span></div>
+        <div class="bg-row"><span class="when">2023 – 2024</span><span>Haptics Engineer (Part-time), Ximira<span class="sub">PHINIX assistive wearable</span></span></div>
+        <div class="bg-row"><span class="when">2022</span><span>Undergraduate Researcher, University of Calgary<span class="sub">Interactions Lab, advised by Prof. Ryo Suzuki</span></span></div>
+        <div class="bg-row"><span class="when">2017 – 2027</span><span>BSc in Computer Science, University of Calgary<span class="sub">Expected June 2027</span></span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Mehrad Faridan · faridan3838@gmail.com</span>
+    <span>Updated October 2026</span>
+  </footer>
+</div>
+</body>
+</html>
