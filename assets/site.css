@@ -1,27 +1,18 @@
-/* Layout: one quiet 720px column, Nandi-style: intro, news, work grouped by research theme, full list, background. Dark-first. */
+/* Layout: one quiet 720px column, Nandi-style: intro, news, work grouped by research theme, full list, background.
+   Colors: warm paper with a deep teal accent, the same in light and dark system modes. */
 :root {
-  --bg: #12161b;
-  --surface: #1a2028;
-  --line: #2a323c;
-  --fg: #e6eaee;
-  --muted: #95a0ab;
-  --accent: #9cc7e8;
-  --accent-ink: #0e1a24;
-  --tag: #24303c;
-  --wash: rgba(156,199,232,0.08);
+  --bg: #faf8f4;
+  --surface: #f0ece5;
+  --line: #e0dad0;
+  --fg: #1d1c1a;
+  --muted: #6b665e;
+  --accent: #0e6b66;
+  --accent-ink: #ffffff;
+  --tag: #e8e2d8;
+  --wash: rgba(14,107,102,0.07);
   --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  color-scheme: dark;
-}
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg: #f6f7f8; --surface: #eceff2; --line: #d6dce2; --fg: #161b21; --muted: #5d6874;
-    --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; --wash: rgba(31,95,143,0.07); color-scheme: light;
-  }
-}
-:root[data-theme="light"] {
-  --bg: #f6f7f8; --surface: #eceff2; --line: #d6dce2; --fg: #161b21; --muted: #5d6874;
-  --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; --wash: rgba(31,95,143,0.07); color-scheme: light;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -34,7 +25,7 @@ body {
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
-a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+a { color: inherit; text-decoration: underline; text-decoration-color: rgba(14,107,102,0.45); text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--accent); }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 .wrap { max-width: 720px; margin: 0 auto; }
@@ -153,7 +144,7 @@ a.project:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .project.is-on .thumb { border-color: var(--accent); }
 .pub-links { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 14px; margin-top: 2px; }
-.pub .t a { text-decoration-color: var(--muted); }
+.pub .t a { text-decoration-color: rgba(14,107,102,0.35); }
 
 /* Project pages */
 .crumb { font-size: 14px; color: var(--muted); }
