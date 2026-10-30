@@ -1,13 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Mehrad Faridan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Mehrad Faridan builds mixed reality systems that help people teach and learn hands-on skills.">
-<meta property="og:title" content="Mehrad Faridan">
-<meta property="og:description" content="Mixed reality researcher building systems that help people teach and learn hands-on skills.">
-<meta property="og:type" content="website">
 <style>
 /* Layout: one quiet 720px column, Nandi-style: intro, news, work grouped by research theme, full list, background. Dark-first. */
 :root {
@@ -19,6 +13,7 @@
   --accent: #9cc7e8;
   --accent-ink: #0e1a24;
   --tag: #24303c;
+  --wash: rgba(156,199,232,0.08);
   --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   color-scheme: dark;
@@ -26,12 +21,12 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --bg: #f6f7f8; --surface: #eceff2; --line: #d6dce2; --fg: #161b21; --muted: #5d6874;
-    --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; color-scheme: light;
+    --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; --wash: rgba(31,95,143,0.07); color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --bg: #f6f7f8; --surface: #eceff2; --line: #d6dce2; --fg: #161b21; --muted: #5d6874;
-  --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; color-scheme: light;
+  --accent: #1f5f8f; --accent-ink: #ffffff; --tag: #e1e7ed; --wash: rgba(31,95,143,0.07); color-scheme: light;
 }
 
 * { box-sizing: border-box; }
@@ -114,6 +109,32 @@ p { margin: 0; }
 
 footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
 
+.lede { margin: 0 0 8px; text-wrap: balance; }
+.thesis-note { color: var(--muted); font-size: 13px; margin: 0 0 36px; }
+.flip-verb { background: none; border: 0; padding: 0; margin: 0; font: inherit; line-height: inherit; color: var(--accent); cursor: pointer; vertical-align: baseline; }
+.flip-verb:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+.verb-roll { display: inline-grid; vertical-align: baseline; transition: width .6s cubic-bezier(.2,.7,.2,1); overflow: hidden; clip-path: inset(0 -0.2em -0.3em); line-height: inherit; }
+.verb-roll .w { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 0.18em; text-decoration-color: var(--accent); }
+.verb-roll > span { grid-area: 1 / 1; white-space: nowrap; justify-self: start; }
+.roll-in { animation: rollIn .6s cubic-bezier(.2,.7,.2,1) both; }
+.roll-out { animation: rollOut .6s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rollIn { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: none; } }
+@keyframes rollOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-100%); } }
+.project { padding: 10px 12px; margin: -10px -12px; border-radius: 8px; scroll-margin-top: 90px;
+  background-image: linear-gradient(90deg, var(--wash), var(--wash)); background-repeat: no-repeat; background-size: 0 100%;
+  transition: background-size .6s cubic-bezier(.2,.7,.2,1), box-shadow .3s; }
+.project.is-on { background-size: 100% 100%; box-shadow: inset 3px 0 0 var(--accent); }
+.project.is-on h3 { color: var(--accent); }
+.project.is-on .media { border-color: var(--accent); border-style: solid; }
+.verb-tag { display: none; }
+.project.is-on .verb-tag { display: inline-block; margin-left: 10px; vertical-align: 2px; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); animation: tagIn .5s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes tagIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .roll-in, .roll-out, .project.is-on .verb-tag { animation: none; }
+  .roll-out { display: none; }
+  .verb-roll, .project { transition: none; }
+}
+
 @media (max-width: 600px) {
   .intro { grid-template-columns: 1fr; }
   .photo { width: 120px; }
@@ -127,9 +148,7 @@ footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var
 html { scroll-behavior: smooth; }
 section { scroll-margin-top: 80px; }
 </style>
-<style>body{margin:0} img{max-width:100%}</style>
-</head>
-<body>
+
 <div class="wrap">
   <header class="top">
     <a class="brand" href="#top">Mehrad Faridan</a>
@@ -145,14 +164,15 @@ section { scroll-margin-top: 80px; }
       <div class="photo" role="img" aria-label="Headshot placeholder"><div><b>MF</b>photo coming soon</div></div>
       <div class="intro-text">
         <h1>Hi, I’m Mehrad.</h1>
-        <p>I’m a mixed reality researcher and engineer based in Calgary. I’m finishing my BSc in Computer Science at the <a href="https://ucalgary.ca">University of Calgary</a>, where I started doing research with Prof. Ryo Suzuki. Since then I’ve spent over four years as research lead for mixed reality at MaKami College, and a year as a visiting researcher with Prof. Hideaki Kuzuoka at the <a href="https://www.u-tokyo.ac.jp/en/">University of Tokyo</a>.</p>
+        <p>I’m a mixed reality researcher and engineer based in Calgary. I’m finishing my BSc in Computer Science at the <a href="https://ucalgary.ca">University of Calgary</a>, where I started doing research with Prof. <a href="https://ryosuzuki.org/">Ryo Suzuki</a>. Since then I’ve spent over four years as research lead for mixed reality at MaKami College, and a year as a visiting researcher with Prof. <a href="https://www.cyber.t.u-tokyo.ac.jp/en">Hideaki Kuzuoka</a> at the <a href="https://www.u-tokyo.ac.jp/en/">University of Tokyo</a>.</p>
         <p>I build mixed reality systems that help people teach and learn physical, hands-on skills, especially at a distance. My work combines interaction techniques with live 3D capture, robots and haptics, and I test these systems with real instructors and learners.</p>
-        <p class="looking">I’m applying to MSc programs for Fall 2027, and I’m open to research and XR engineering roles.</p>
+        <p class="looking">I’m applying to MSc programs for Fall 2027, and I’m open to research and XR engineering roles, including internships for summer 2027.</p>
         <div class="links">
           <a href="https://scholar.google.ca/citations?user=amh7v2EAAAAJ&amp;hl=en">Google Scholar</a>
           <a href="https://www.linkedin.com/in/mehrad-f-a34462164/">LinkedIn</a>
           <a href="Mehrad_Faridan_CV.pdf">CV (PDF)</a>
           <span>faridan3838@gmail.com</span>
+          <span>mehrad@cyber.t.u-tokyo.ac.jp</span>
         </div>
       </div>
     </section>
@@ -171,33 +191,34 @@ section { scroll-margin-top: 80px; }
 
     <section id="work" aria-labelledby="work-h">
       <h2 id="work-h">Selected work</h2>
-      <p class="lede">From watching an expert to <em>doing it with your own hands</em>.</p>
+      <p class="lede flip-thesis">Mixed reality that helps people <button type="button" class="flip-verb" aria-label="teach. Go to this work"><span class="verb-roll" aria-hidden="true"><span class="roll-in"><span class="w">teach</span></span></span></button> hands-on work.</p>
+      <p class="thesis-note">Each word maps to one project below. Click it to jump there.</p>
 
       <div class="theme">
         <h3>Teaching hands-on skills remotely</h3>
         <p>Massage, physiotherapy and other hands-on trades are taught in person. These systems let an instructor see, guide and reach students who aren’t in the room.</p>
         <div class="projects">
-          <article class="project">
+          <article class="project" id="w-chameleoncontrol" data-verb="teach">
             <div class="media">ChameleonControl<br>video coming soon</div>
             <div>
               <div class="meta"><span>CHI 2023</span><span class="pill">First author</span></div>
-              <h3>ChameleonControl</h3>
+              <h3>ChameleonControl<span class="verb-tag">teach</span></h3>
               <p>A remote instructor guides a real person in the classroom through mixed reality gestures, so that person’s hands carry out the instructor’s demonstration. Deployed in a physiotherapy classroom and evaluated with 53 participants across three studies.</p>
             </div>
           </article>
-          <article class="project">
+          <article class="project" id="w-scalable-academy" data-verb="supervise">
             <div class="media">Scalable Academy<br>video coming soon</div>
             <div>
               <div class="meta"><span>AHs 2026 · IEEE VR 2026 Workshop</span></div>
-              <h3>Scalable Academy</h3>
+              <h3>Scalable Academy<span class="verb-tag">supervise</span></h3>
               <p>A VR view that streams live 3D point clouds of up to six students at once. In a study with eight massage-therapy instructors, they projected that one instructor could watch over up to 15 students.</p>
             </div>
           </article>
-          <article class="project">
+          <article class="project" id="w-holobots" data-verb="share">
             <div class="media">HoloBots<br>video coming soon</div>
             <div>
               <div class="meta"><span>UIST 2023</span></div>
-              <h3>HoloBots</h3>
+              <h3>HoloBots<span class="verb-tag">share</span></h3>
               <p>Mobile robots give a remote person’s hologram a physical presence, so collaborators in different places can touch and move the same real objects.</p>
             </div>
           </article>
@@ -208,19 +229,19 @@ section { scroll-margin-top: 80px; }
         <h3>Turning instructions into guidance</h3>
         <p>Most how-to knowledge lives in flat videos and conversation. These projects bring it into the space where the work happens.</p>
         <div class="projects">
-          <article class="project">
+          <article class="project" id="w-video2mr" data-verb="learn">
             <div class="media">Video2MR<br>video coming soon</div>
             <div>
               <div class="meta"><span>IUI 2025</span></div>
-              <h3>Video2MR</h3>
+              <h3>Video2MR<span class="verb-tag">learn</span></h3>
               <p>Extracts motion from ordinary 2D tutorial videos and turns it into 3D mixed reality instructions you can follow in your own space.</p>
             </div>
           </article>
-          <article class="project">
+          <article class="project" id="w-sketched-reality" data-verb="prototype">
             <div class="media">Sketched Reality<br>video coming soon</div>
             <div>
               <div class="meta"><span>UIST 2022</span></div>
-              <h3>Sketched Reality</h3>
+              <h3>Sketched Reality<span class="verb-tag">prototype</span></h3>
               <p>Sketch in AR to define how virtual objects and small tabletop robots affect each other, in both directions.</p>
             </div>
           </article>
@@ -231,11 +252,11 @@ section { scroll-margin-top: 80px; }
         <h3>Touch and haptics</h3>
         <p>Feeling an interface, not just seeing it.</p>
         <div class="projects">
-          <article class="project">
+          <article class="project" id="w-ultrabots" data-verb="feel">
             <div class="media">UltraBots<br>video coming soon</div>
             <div>
               <div class="meta"><span>UIST 2022 Student Innovation Contest</span><span class="pill">Honorable Mention</span></div>
-              <h3>UltraBots</h3>
+              <h3>UltraBots<span class="verb-tag">feel</span></h3>
               <p>Robot-mounted ultrasound arrays move with you to deliver mid-air touch feedback across a large VR space.</p>
             </div>
           </article>
@@ -280,9 +301,58 @@ section { scroll-margin-top: 80px; }
   </main>
 
   <footer>
-    <span>Mehrad Faridan · faridan3838@gmail.com</span>
+    <span>Mehrad Faridan · faridan3838@gmail.com · mehrad@cyber.t.u-tokyo.ac.jp</span>
     <span>Updated October 2026</span>
   </footer>
 </div>
-</body>
-</html>
+
+<script>
+(function () {
+  var btn = document.querySelector('.flip-verb');
+  var roll = btn && btn.querySelector('.verb-roll');
+  var items = Array.prototype.slice.call(document.querySelectorAll('.project[data-verb]'));
+  if (!btn || !roll || !items.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var i = 0, timer = null, paused = false;
+  var measure = document.createElement('span');
+  measure.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit';
+  btn.appendChild(measure);
+  function widthOf(t) { measure.textContent = t; return measure.getBoundingClientRect().width; }
+  function show(n, animate) {
+    i = (n + items.length) % items.length;
+    var item = items[i], verb = item.getAttribute('data-verb');
+    var cur = roll.querySelector('.roll-in');
+    if (animate && !reduce && cur) {
+      cur.className = 'roll-out';
+      setTimeout(function () { if (cur.parentNode) cur.parentNode.removeChild(cur); }, 650);
+    } else {
+      roll.textContent = '';
+    }
+    var next = document.createElement('span');
+    next.className = 'roll-in';
+    next.innerHTML = '<span class="w"></span>';
+    next.firstChild.textContent = verb;
+    roll.appendChild(next);
+    roll.style.width = Math.ceil(widthOf(verb)) + 'px';
+    btn.setAttribute('aria-label', verb + '. Go to this work');
+    items.forEach(function (el, k) { el.classList.toggle('is-on', k === i); });
+  }
+  function tick() { if (!paused) show(i + 1, true); }
+  function start() { stop(); timer = setInterval(tick, reduce ? 4000 : 2600); }
+  function stop() { if (timer) clearInterval(timer); timer = null; }
+  btn.addEventListener('click', function () { items[i].scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); });
+  items.forEach(function (el, k) {
+    el.addEventListener('mouseenter', function () { paused = true; if (k !== i) show(k, true); });
+    el.addEventListener('mouseleave', function () { paused = false; });
+  });
+  btn.addEventListener('mouseenter', function () { paused = true; });
+  btn.addEventListener('mouseleave', function () { paused = false; });
+  btn.addEventListener('focus', function () { paused = true; });
+  btn.addEventListener('blur', function () { paused = false; });
+  document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+  show(0, false);
+  start();
+})();
+</script>
+
+</body></html>
