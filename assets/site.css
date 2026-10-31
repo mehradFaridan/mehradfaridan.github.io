@@ -258,3 +258,15 @@ section, .project { scroll-margin-top: 84px; }
   section, .project { scroll-margin-top: 28px; }
 }
 @media (prefers-reduced-motion: reduce) { .sidebar, .sidebar.open { transition: none; } }
+.with img[src$="/snap.png"] { padding: 0; background: #fffc00; }
+
+/* Intro: text wraps around the photo (no empty column under it), stacked on phones */
+.intro { display: block; }
+.intro::after { content: ""; display: block; clear: both; }
+.intro .photo { float: left; margin: 6px 28px 10px 0; }
+.intro-text { display: block; }
+.intro-text > h1 { margin-bottom: 0; }
+.intro-text > * + * { margin-top: 14px; }
+@media (max-width: 600px) {
+  .intro .photo { float: none; margin: 0 0 20px; }
+}
