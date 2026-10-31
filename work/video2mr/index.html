@@ -19,19 +19,50 @@
 <link rel="stylesheet" href="/assets/site.css">
 <script src="/assets/theme.js"></script>
 <script src="/assets/analytics.js" defer></script>
+<script src="/assets/nav.js" defer></script>
 </head>
 <body>
 
-<div class="wrap">
-  <header class="top">
-    <a class="brand" href="/">Mehrad Faridan<span class="sep" aria-hidden="true"></span> <span class="native" lang="fa" dir="rtl">مهراد فریدان</span></a>
-    <nav class="menu" aria-label="Sections">
-      <a href="/#work">Work</a>
-      <a href="/#publications">Publications</a>
-      <a href="/#background">Background</a>
-      <button type="button" class="theme-toggle" aria-label="Switch color theme"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
-    </nav>
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="/#top">Mehrad Faridan<span class="sep" aria-hidden="true"></span> <span class="native" lang="fa" dir="rtl">مهراد فریدان</span></a>
+    <button type="button" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </header>
+
+  <aside class="sidebar" id="sidebar" aria-label="Site navigation">
+    <div class="side-head">
+      <a class="brand" href="/#top">Mehrad Faridan<span class="sep" aria-hidden="true"></span> <span class="native" lang="fa" dir="rtl">مهراد فریدان</span></a>
+      <button type="button" class="menu-close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <nav class="side-nav" aria-label="Sections">
+      <a href="/#top" data-section="top">Home</a>
+      <a href="/#work" data-section="work">Selected work</a>
+      <ul class="side-projects">
+          <li><a href="/work/chameleoncontrol/">ChameleonControl</a></li>
+          <li><a href="/work/scalable-academy/">Scalable Academy</a></li>
+          <li><a href="/work/holobots/">HoloBots</a></li>
+          <li><a href="/work/video2mr/" aria-current="page">Video2MR</a></li>
+          <li><a href="/work/sketched-reality/">Sketched Reality</a></li>
+          <li><a href="/work/augmented-conversation/">Augmented Conversation</a></li>
+          <li><a href="/work/ultrabots/">UltraBots</a></li>
+          <li><a href="/work/phinix/">PHINIX</a></li>
+      </ul>
+      <a href="/#publications" data-section="publications">Publications</a>
+      <a href="/#awards" data-section="awards">Awards &amp; honors</a>
+      <a href="/#background" data-section="background">Background</a>
+    </nav>
+    <div class="side-links">
+      <a href="mailto:faridan3838@gmail.com">Email</a>
+      <a href="/Mehrad_Faridan_CV.pdf">CV</a>
+      <a href="https://scholar.google.ca/citations?user=amh7v2EAAAAJ&amp;hl=en">Google Scholar</a>
+      <a href="https://www.linkedin.com/in/mehradfaridan/">LinkedIn</a>
+      <a href="https://x.com/MehradFaridan">X</a>
+    </div>
+    <button type="button" class="theme-toggle" aria-label="Switch color theme"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+  </aside>
+  <div class="scrim" hidden></div>
+
+  <div class="wrap">
 
   <main>
     <article class="paper">
@@ -71,6 +102,7 @@
     <span>Mehrad Faridan · <a href="mailto:faridan3838@gmail.com">faridan3838@gmail.com</a> · <a href="mailto:mehrad@cyber.t.u-tokyo.ac.jp">mehrad@cyber.t.u-tokyo.ac.jp</a></span>
     <span>Updated October 2026</span>
   </footer>
+  </div>
 </div>
 
 <script src="/assets/copy.js" defer></script>
