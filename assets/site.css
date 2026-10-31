@@ -236,3 +236,9 @@ nav.menu { align-items: center; }
 .credit { font-size: 12px; color: var(--muted); margin-top: -14px; }
 .hero.small { max-width: 360px; }
 .frame video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+
+/* Research collaborations: organizations from co-author affiliations */
+.collab h2 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 0 0 12px; letter-spacing: 0.02em; }
+.orgs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 10px; }
+.orgs li { font-size: 15px; font-weight: 700; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+@media (max-width: 600px) { .orgs li { font-size: 14px; padding: 5px 10px; } }
