@@ -13,7 +13,7 @@
   function row(name) {
     var el = list.querySelector('[data-tl="' + name + '"]');
     var top = el.offsetTop;
-    return { top: top, bottom: top + el.offsetHeight, dot: top + 11 };
+    return { top: top, bottom: top + el.offsetHeight, dot: top + 9 };
   }
   function curve(x1, y1, x2, y2) {
     var m = (y1 + y2) / 2;
@@ -24,32 +24,30 @@
   function draw() {
     var mk = row('makami'), ut = row('utokyo'), xi = row('ximira'), uc = row('ucalgary');
     var gap = ut.top - mk.bottom, a = LANE[0], b = LANE[1];
+    var join = uc.top - gap / 2;
     var paths = [
       // MaKami: the main line, growing out of the UCalgary research
-      ['main', line(a, mk.dot, uc.top - gap / 2)],
-      ['main', curve(b, uc.dot, a, uc.top - gap / 2)],
-      // UTokyo: branches off MaKami and merges back in
-      ['main', curve(a, ut.top - gap / 2, b, ut.dot) + line(b, ut.dot, ut.bottom - 6) + curve(b, ut.bottom - 6, a, ut.bottom + gap / 2)],
-      // Ximira: a separate job at the same time
-      ['side', line(b, xi.dot, xi.bottom - 4)]
+      line(a, mk.dot, join),
+      curve(b, uc.dot, a, join),
+      // UTokyo and Ximira: separate roles alongside MaKami
+      line(b, ut.dot, ut.bottom - 4),
+      line(b, xi.dot, xi.bottom - 4)
     ];
-    var dots = [['main', a, mk.dot], ['main', b, ut.dot], ['side', b, xi.dot], ['side', b, xi.bottom - 4], ['main', b, uc.dot]];
+    var dots = [[a, mk.dot], [b, ut.dot], [b, ut.bottom - 4], [b, xi.dot], [b, xi.bottom - 4], [b, uc.dot]];
     var h = list.offsetHeight;
     svg.setAttribute('width', 48);
     svg.setAttribute('height', h);
     svg.setAttribute('viewBox', '0 0 48 ' + h);
     svg.innerHTML = '';
-    paths.forEach(function (p) {
+    paths.forEach(function (d) {
       var el = document.createElementNS(NS, 'path');
-      el.setAttribute('class', p[0]);
-      el.setAttribute('d', p[1]);
+      el.setAttribute('d', d);
       svg.appendChild(el);
     });
     dots.forEach(function (d) {
       var el = document.createElementNS(NS, 'circle');
-      el.setAttribute('class', d[0]);
-      el.setAttribute('cx', d[1]);
-      el.setAttribute('cy', d[2]);
+      el.setAttribute('cx', d[0]);
+      el.setAttribute('cy', d[1]);
       el.setAttribute('r', 5);
       svg.appendChild(el);
     });
