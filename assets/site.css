@@ -1,4 +1,4 @@
-/* Layout: one quiet 720px column, Nandi-style: intro, news, work grouped by research theme, full list, background.
+/* Layout: one quiet 720px column, Nandi-style: intro, work grouped by research theme, full list, background.
    Colors: light is warm paper with a deep teal accent; dark is charcoal with a soft green accent.
    Follows the system setting unless the visitor picks one with the header toggle (data-theme on <html>). */
 :root {
@@ -77,9 +77,6 @@ p { margin: 0; }
 .links { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 15px; color: var(--muted); }
 .links span { user-select: all; }
 
-.news { display: grid; grid-template-columns: 92px 1fr; gap: 10px 20px; font-size: 15px; }
-.news dt { color: var(--muted); font-variant-numeric: tabular-nums; }
-.news dd { margin: 0; }
 
 .lede { font-size: clamp(22px, 3.4vw, 28px); line-height: 1.25; font-weight: 700; margin: 0 0 36px; text-wrap: balance; }
 .lede em { font-style: normal; color: var(--accent); }
@@ -146,8 +143,7 @@ footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var
   .photo { width: 120px; }
   .project { grid-template-columns: 1fr; }
   .media { width: 100%; }
-  .news, .bg-row { grid-template-columns: 1fr; gap: 2px 0; }
-  .news dd { margin-bottom: 10px; }
+  .bg-row { grid-template-columns: 1fr; gap: 2px 0; }
   nav.menu a { padding: 4px 10px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
