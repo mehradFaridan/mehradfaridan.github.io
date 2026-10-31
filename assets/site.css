@@ -237,8 +237,15 @@ nav.menu { align-items: center; }
 .hero.small { max-width: 360px; }
 .frame video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
 
-/* Research collaborations: organizations from co-author affiliations */
+/* Research collaborations: organizations from co-author affiliations, with the projects they were part of */
 .collab h2 { font-size: 14px; font-weight: 400; color: var(--muted); margin: 0 0 12px; letter-spacing: 0.02em; }
-.orgs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 10px; }
-.orgs li { font-size: 15px; font-weight: 700; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
-@media (max-width: 600px) { .orgs li { font-size: 14px; padding: 5px 10px; } }
+.orgs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 10px; }
+.orgs li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); min-width: 0; }
+.orgs .logo { flex: none; width: 40px; height: 40px; border-radius: 8px; background: #fff; display: grid; place-items: center; border: 1px solid var(--line); }
+.orgs .logo img { width: 28px; height: 28px; object-fit: contain; }
+.orgs b { display: block; font-size: 14px; line-height: 1.3; }
+.orgs .proj { display: block; font-size: 13px; color: var(--muted); line-height: 1.4; }
+.orgs .proj a { color: inherit; }
+.orgs .proj a:hover { color: var(--fg); }
+@media (max-width: 600px) { .orgs { grid-template-columns: 1fr 1fr; gap: 8px; } .orgs li { padding: 8px 10px; gap: 10px; } .orgs .logo { width: 34px; height: 34px; } .orgs .logo img { width: 24px; height: 24px; } }
+@media (max-width: 330px) { .orgs { grid-template-columns: 1fr; } }
