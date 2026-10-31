@@ -105,6 +105,18 @@ img.photo { display: block; height: auto; object-fit: cover; }
 .bg-row .when { color: var(--muted); font-variant-numeric: tabular-nums; }
 .bg-row .sub { color: var(--muted); display: block; }
 
+/* Background timeline: assets/timeline.js draws the lines in the left gutter */
+.tl { list-style: none; margin: 0; padding: 0; position: relative; display: flex; flex-direction: column; gap: 30px; }
+.tl.drawn, .tl.drawn + .tl-edu { padding-left: 64px; }
+.tl svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.tl path { fill: none; stroke-width: 2; stroke-linecap: round; }
+.tl path.main { stroke: var(--accent); }
+.tl path.side { stroke: var(--muted); }
+.tl circle { fill: var(--bg); stroke-width: 2; }
+.tl circle.main { stroke: var(--accent); }
+.tl circle.side { stroke: var(--muted); }
+.tl-edu { margin: 30px 0 0; font-size: 15px; color: var(--muted); }
+
 footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
 
 .lede { margin: 0 0 36px; text-wrap: balance; }
