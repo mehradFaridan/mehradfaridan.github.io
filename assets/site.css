@@ -228,4 +228,7 @@ a.project:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px;
 }
 @media (max-width: 600px) { .theme-toggle { width: 28px; height: 28px; } }
 nav.menu { align-items: center; }
-.brand .native { font-weight: 400; font-size: 1.15em; line-height: 1; color: var(--muted); color: color-mix(in srgb, var(--fg) 80%, var(--bg)); margin-left: 8px; font-family: "Vazirmatn", "SF Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif; unicode-bidi: isolate; }
+/* Name in Persian: IBM Plex Sans Arabic Light, subset to just the letters of the name (assets/fonts, OFL licensed) */
+@font-face { font-family: "Name Persian"; src: url("/assets/fonts/plex-arabic-light-name.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+.brand .sep { display: inline-block; width: 1px; height: 0.95em; background: var(--line); margin: 0 2px 0 10px; vertical-align: -0.12em; }
+.brand .native { font-family: "Name Persian", "SF Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif; font-weight: 300; color: var(--muted); margin-left: 10px; unicode-bidi: isolate; }
