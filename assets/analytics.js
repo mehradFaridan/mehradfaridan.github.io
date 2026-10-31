@@ -6,7 +6,7 @@
 (function () {
   var UMAMI_ID = 'dd50282c-73c0-4fec-ab7c-3ffd9c1707d1';
   var CLARITY_ID = 'z64g8lc23m';
-  var GA_ID = '';
+  var GA_ID = 'G-TPGYCLY45P';
 
   if (location.hostname !== 'mehradfaridan.github.io') return;
 
