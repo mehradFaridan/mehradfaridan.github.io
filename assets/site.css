@@ -78,7 +78,7 @@ p { margin: 0; }
 .links span { user-select: all; }
 
 
-.lede { font-size: clamp(22px, 3.4vw, 28px); line-height: 1.25; font-weight: 700; margin: 0 0 36px; text-wrap: balance; }
+.lede { font-size: clamp(22px, 3.4vw, 26px); line-height: 1.25; font-weight: 700; margin: 0 0 36px; text-wrap: balance; }
 .lede em { font-style: normal; color: var(--accent); }
 .theme { display: flex; flex-direction: column; gap: 8px; }
 .theme + .theme { margin-top: 44px; }

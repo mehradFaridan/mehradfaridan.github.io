@@ -226,6 +226,29 @@
   measure.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font:inherit';
   btn.appendChild(measure);
   function widthOf(t) { measure.textContent = t; return measure.getBoundingClientRect().width; }
+  // Reserve the headline's height for its longest verb, so the page below never jumps when a word wraps.
+  var lede = btn.closest('.lede');
+  function reserveHeight() {
+    var longest = items.map(function (el) { return el.getAttribute('data-verb'); })
+      .sort(function (a, b) { return widthOf(b) - widthOf(a); })[0];
+    var clone = lede.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.style.cssText = 'position:absolute;visibility:hidden;left:0;top:0;min-height:0;width:' + lede.getBoundingClientRect().width + 'px';
+    var r = clone.querySelector('.verb-roll');
+    r.innerHTML = '<span><span class="w"></span></span>';
+    r.querySelector('.w').textContent = longest;
+    r.style.width = 'auto';
+    lede.parentNode.appendChild(clone);
+    lede.style.minHeight = clone.getBoundingClientRect().height + 'px';
+    lede.parentNode.removeChild(clone);
+  }
+  var resizeQueued = false;
+  window.addEventListener('resize', function () {
+    if (resizeQueued) return;
+    resizeQueued = true;
+    requestAnimationFrame(function () { resizeQueued = false; reserveHeight(); });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(reserveHeight);
   function show(n, animate) {
     i = (n + items.length) % items.length;
     var item = items[i], verb = item.getAttribute('data-verb');
@@ -259,6 +282,7 @@
   btn.addEventListener('blur', function () { paused = false; });
   document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
   show(0, false);
+  reserveHeight();
   start();
 })();
 </script>
