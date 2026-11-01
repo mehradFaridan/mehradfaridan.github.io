@@ -23,7 +23,7 @@
 </head>
 <body>
 
-<!-- Remaining placeholder: the award photo. Photos and demo videos are Ximira's, credited on the page. -->
+<!-- Photos and demo videos are Ximira's, credited on the page (except the award photo, which is Mehrad's). -->
 <div class="shell">
   <header class="topbar">
     <a class="brand" href="/#top">Mehrad Faridan<span class="sep" aria-hidden="true"></span> <span class="native" lang="fa" dir="rtl">مهراد فریدان</span></a>
@@ -48,9 +48,9 @@
           <li><a href="/work/ultrabots/">UltraBots</a></li>
           <li><a href="/work/phinix/" aria-current="page">PHINIX</a></li>
       </ul>
+      <a href="/#background" data-section="background">Background</a>
       <a href="/#publications" data-section="publications">Publications</a>
       <a href="/#awards" data-section="awards">Awards &amp; honors</a>
-      <a href="/#background" data-section="background">Background</a>
     </nav>
     <div class="side-links">
       <div class="side-email"><a href="mailto:faridan3838@gmail.com">faridan3838@gmail.com</a><a href="mailto:mehrad.faridan1@ucalgary.ca">mehrad.faridan1@ucalgary.ca</a><a href="mailto:mehrad@cyber.t.u-tokyo.ac.jp">mehrad@cyber.t.u-tokyo.ac.jp</a></div>
@@ -80,11 +80,12 @@
       <p>I prototyped and assembled PHINIX’s hardware, and 3D-printed parts for it, including pieces of the haptic bracelet. I also designed the audio and voice interface that tells the wearer what the system detects, and wrote part of the software, which the team later built on.</p>
       <figure class="hero small"><img src="/images/phinix-bracelet.jpg" alt="Close-up of the haptic bracelet: a row of 3D-printed vibration modules on a strap with a control unit at the end"></figure>
       <p class="credit">The haptic bracelet. Photo: Ximira</p>
+      <h2 id="build">How it’s built</h2>
+      <p>A Luxonis OAK-D Pro depth camera worn on the chest connects to a computing hub in a backpack, built around a Framework laptop mainboard with a 12th-gen Intel Core i7. Audio reaches the wearer through a bone-conduction headset, so their ears stay open to the world, and the haptic bracelets pair vibration motors with an IMU. The software runs on Ubuntu and ROS 2, with OpenVINO, DepthAI and OpenCV for detection and Vosk for speech. Many detection features can fire at once, so I wrote the part that sorts and prioritizes their messages, so the wearer hears what matters most first instead of everything at the same time.</p>
 
       <h2 id="recognition">Recognition</h2>
       <p>PHINIX won PC Pro’s Best of CES 2024.</p>
-      <!-- Placeholder: replace with <figure class="hero"><img src="/images/phinix-award.jpg" alt="..."></figure> -->
-      <div class="hero empty" role="img" aria-label="Award photo placeholder">Award photo coming soon</div>
+      <figure class="hero small"><img src="/images/phinix-award.jpg" alt="The PC Pro Best of CES 2024 award held up in front of the Ximira booth at CES, next to a mannequin wearing the PHINIX camera, backpack and haptic bracelet" width="900" height="1200" loading="lazy"></figure>
 
       <h2 id="videos">Videos</h2>
       <div class="videos">

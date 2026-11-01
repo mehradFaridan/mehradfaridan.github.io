@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Scalable Academy | Mehrad Faridan</title>
-<meta name="description" content="A VR view that streams live 3D pointclouds of up to six students at once. In a study with eight massage therapy experts, the bottleneck shifted from walking the classroom to managing attention, and a model of the results predicts one instructor could monitor up to 15 students.">
+<meta name="description" content="A VR view that shows 3D pointclouds of up to six students at once. In a study with eight massage therapy experts, the bottleneck shifted from walking the classroom to managing attention, and a model of the results predicts one instructor could monitor up to 15 students.">
 <link rel="canonical" href="https://mehradfaridan.github.io/work/scalable-academy/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Mehrad Faridan">
 <meta property="og:title" content="Scalable Academy | Mehrad Faridan">
-<meta property="og:description" content="A VR view that streams live 3D pointclouds of up to six students at once. In a study with eight massage therapy experts, the bottleneck shifted from walking the classroom to managing attention, and a model of the results predicts one instructor could monitor up to 15 students.">
+<meta property="og:description" content="A VR view that shows 3D pointclouds of up to six students at once. In a study with eight massage therapy experts, the bottleneck shifted from walking the classroom to managing attention, and a model of the results predicts one instructor could monitor up to 15 students.">
 <meta property="og:url" content="https://mehradfaridan.github.io/work/scalable-academy/">
 <meta property="og:image" content="https://mehradfaridan.github.io/images/og/scalable-academy.jpg">
 <meta property="og:image:width" content="1200">
@@ -47,9 +47,9 @@
           <li><a href="/work/ultrabots/">UltraBots</a></li>
           <li><a href="/work/phinix/">PHINIX</a></li>
       </ul>
+      <a href="/#background" data-section="background">Background</a>
       <a href="/#publications" data-section="publications">Publications</a>
       <a href="/#awards" data-section="awards">Awards &amp; honors</a>
-      <a href="/#background" data-section="background">Background</a>
     </nav>
     <div class="side-links">
       <div class="side-email"><a href="mailto:faridan3838@gmail.com">faridan3838@gmail.com</a><a href="mailto:mehrad.faridan1@ucalgary.ca">mehrad.faridan1@ucalgary.ca</a><a href="mailto:mehrad@cyber.t.u-tokyo.ac.jp">mehrad@cyber.t.u-tokyo.ac.jp</a></div>
@@ -72,9 +72,11 @@
       <p class="authors"><b>Mehrad Faridan*</b>, Takashige Suzuki*, Takafumi Kanaya, Ryo Suzuki, Hideaki Kuzuoka<span class="eq">* Equal contribution</span></p>
       <div class="buttons"><a class="btn" href="https://doi.org/10.1145/3795011.3797396">Paper</a><a class="btn" href="https://dl.acm.org/doi/pdf/10.1145/3795011.3797396">PDF</a><a class="btn" href="#videos">Video</a></div>
       <figure class="hero"><img src="/images/scalable-academy.jpg" alt="Left: a student practising massage on a table, captured by depth cameras on stands. Right: the instructor’s VR interface in Supervisory Scale mode, showing many student pointclouds, and Observational Detail mode, showing two up close"></figure>
-      <p>Hands-on skills like massage therapy are taught through a cycle of demonstration, practice and feedback, which depends on an instructor watching each student closely. That is hard to do remotely, and hard to scale. Scalable Academy lets one instructor monitor a whole classroom in VR: Azure Kinect depth cameras capture each student as a live 3D pointcloud, viewed on a Meta Quest 3. Instructors switch between two views: Supervisory Scale, which shows up to six students at once for quick sweeps of the room, and Observational Detail, which shows two students as fused multi-camera pointclouds that can be inspected from any angle. In a study with eight domain experts (five instructors and three teaching assistants from a vocational massage therapy program), the bottleneck of instruction moved from the physical load of moving around the classroom to the cognitive load of managing attention, and a model of their selection times predicts that one instructor could monitor up to 15 students. A related version, “Scalable Academy: Pointcloud Interface for Remote Hands-on Classroom”, was presented at the IEEE VR 2026 VR-HSA workshop.</p>
+      <p>Hands-on skills like massage therapy are taught through a cycle of demonstration, practice and feedback, which depends on an instructor watching each student closely. That is hard to do remotely, and hard to scale. Scalable Academy lets one instructor monitor a whole classroom in VR: Azure Kinect depth cameras capture each student as a 3D pointcloud, viewed on a Meta Quest 3. We explored two configurations: Supervisory Scale, which shows up to six students at once for quick sweeps of the room, and Observational Detail, which shows two students as fused multi-camera pointclouds that can be inspected from any angle. In a study with eight domain experts (five instructors and three teaching assistants from a vocational massage therapy program), the bottleneck of instruction moved from the physical load of moving around the classroom to the cognitive load of managing attention, and a model of their selection times predicts that one instructor could monitor up to 15 students. A related version, “Scalable Academy: Pointcloud Interface for Remote Hands-on Classroom”, was presented at the IEEE VR 2026 VR-HSA workshop.</p>
       <h2 id="role">My role</h2>
-      <p>I co-led the project. I designed and built the system, from point-cloud capture and streaming to the VR interface on Meta Quest 3, and ran the pilot studies with massage therapy instructors.</p>
+      <p>I co-led the project. I designed and built the system, from point-cloud capture and streaming to the VR interface on Meta Quest 3, and ran all of the user studies.</p>
+      <h2 id="build">How I built it</h2>
+      <p>The interface is a Unity app for Meta Quest 3 that works in a virtual office or in passthrough. Each student is captured by three synchronized Azure Kinect cameras, calibrated and fused into a single pointcloud, so an instructor can inspect a technique from any side. The hardest problem was rendering: on an Intel i7 and RTX 3060 PC, the system could draw at most six single-camera pointclouds at 30 fps. That ceiling shaped the design, giving one configuration with six students for sweeps of the room and one with two fused, high-detail students for close assessment. For the study, we recorded a set of massage performances, including deliberate mistakes checked by expert instructors, so every participant judged the same students.</p>
       <h2 id="videos">Video</h2>
       <div class="videos"><div class="video"><span>Video figure</span><div class="frame"><video controls preload="metadata" playsinline poster="/images/scalable-academy-video.jpg" src="/videos/scalable-academy.mp4" title="Scalable Academy video figure"></video></div></div></div>
       <h2 id="cite">Cite</h2>

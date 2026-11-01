@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ChameleonControl | Mehrad Faridan</title>
-<meta name="description" content="A remote instructor guides a real person in the classroom through mixed reality gestures, so that person’s hands carry out the instructor’s demonstration. Deployed in a physiotherapy classroom and evaluated with 53 participants across three studies.">
+<meta name="description" content="A remote instructor guides a real person in the classroom through mixed reality gestures, so that person’s hands carry out the instructor’s demonstration. Deployed in physiotherapy and massage therapy classes and evaluated with 53 participants across three studies.">
 <link rel="canonical" href="https://mehradfaridan.github.io/work/chameleoncontrol/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Mehrad Faridan">
 <meta property="og:title" content="ChameleonControl | Mehrad Faridan">
-<meta property="og:description" content="A remote instructor guides a real person in the classroom through mixed reality gestures, so that person’s hands carry out the instructor’s demonstration. Deployed in a physiotherapy classroom and evaluated with 53 participants across three studies.">
+<meta property="og:description" content="A remote instructor guides a real person in the classroom through mixed reality gestures, so that person’s hands carry out the instructor’s demonstration. Deployed in physiotherapy and massage therapy classes and evaluated with 53 participants across three studies.">
 <meta property="og:url" content="https://mehradfaridan.github.io/work/chameleoncontrol/">
 <meta property="og:image" content="https://mehradfaridan.github.io/images/og/chameleoncontrol.jpg">
 <meta property="og:image:width" content="1200">
@@ -47,9 +47,9 @@
           <li><a href="/work/ultrabots/">UltraBots</a></li>
           <li><a href="/work/phinix/">PHINIX</a></li>
       </ul>
+      <a href="/#background" data-section="background">Background</a>
       <a href="/#publications" data-section="publications">Publications</a>
       <a href="/#awards" data-section="awards">Awards &amp; honors</a>
-      <a href="/#background" data-section="background">Background</a>
     </nav>
     <div class="side-links">
       <div class="side-email"><a href="mailto:faridan3838@gmail.com">faridan3838@gmail.com</a><a href="mailto:mehrad.faridan1@ucalgary.ca">mehrad.faridan1@ucalgary.ca</a><a href="mailto:mehrad@cyber.t.u-tokyo.ac.jp">mehrad@cyber.t.u-tokyo.ac.jp</a></div>
@@ -72,9 +72,11 @@
       <p class="authors"><b>Mehrad Faridan</b>, Bheesha Kumari, Ryo Suzuki</p>
       <div class="buttons"><a class="btn" href="https://doi.org/10.1145/3544548.3581381">Paper</a><a class="btn" href="https://arxiv.org/pdf/2302.11053">PDF</a><a class="btn" href="https://www.youtube.com/watch?v=VOe3fETd3sk">Video</a></div>
       <figure class="hero"><img src="/images/chameleoncontrol.jpg" alt="Concept sketch: a remote instructor’s tracked hands are overlaid in a local surrogate’s mixed reality view, with sign language, cooking and assembly scenarios"></figure>
-      <p>Remote video lessons work poorly for hands-on skills, because students need to see a technique performed on a real body or object in the room. ChameleonControl instead lets a remote instructor teleoperate a real person in the classroom. The instructor’s tracked hands are overlaid in the local surrogate’s mixed reality headset, and the surrogate matches them with their own hands while the instructor talks through the lesson, so the class watches a live, physical demonstration. We deployed the system in physiotherapy classrooms and explored mechanical assembly, sign language and cooking lessons. Across three studies with 53 participants, it increased engagement and the sense of co-presence compared to conventional remote instruction.</p>
+      <p>Remote video lessons work poorly for hands-on skills, because students need to see a technique performed on a real body or object in the room. ChameleonControl instead lets a remote instructor teleoperate a real person in the classroom. The instructor’s tracked hands are overlaid in the local surrogate’s mixed reality headset, and the surrogate matches them with their own hands while the instructor talks through the lesson, so the class watches a live, physical demonstration. We deployed the system in physiotherapy and massage therapy classes and explored mechanical assembly, sign language and cooking lessons. Across three studies with 53 participants, it increased engagement and the sense of co-presence compared to conventional remote instruction.</p>
       <h2 id="role">My role</h2>
-      <p>I led the project. I designed and built the system, deployed it in physiotherapy and massage therapy classrooms, and ran all three user studies.</p>
+      <p>I led the project. I designed and built the system, deployed it in physiotherapy and massage therapy classes, and ran all three user studies.</p>
+      <h2 id="build">How I built it</h2>
+      <p>The surrogate wears a headset I put together from a Meta Quest 2, a ZED Mini stereo camera and an iPad Air on a 3D-printed mount. The iPad shows the instructor’s face to the class, but it also covers the Quest’s own passthrough cameras, so the ZED Mini became the surrogate’s eyes: a Windows PC running Unity renders its stereo feed and streams it to the Quest over Oculus Link. The same view goes to the remote instructor, whose hands are tracked with a Leap Motion controller and drawn as virtual hands in both people’s view, so the surrogate can line their own hands up with them. The finished headset weighs 1.3 kg.</p>
       <h2 id="videos">Videos</h2>
       <div class="videos"><div class="video"><span>Video figure</span><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/VOe3fETd3sk" title="ChameleonControl video figure" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div><div class="video"><span>Preview</span><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/Hnb7LE4hFQ8" title="ChameleonControl preview" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div></div>
       <h2 id="cite">Cite</h2>

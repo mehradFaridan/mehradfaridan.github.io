@@ -36,7 +36,7 @@
   // Highlight the section in view (home page only).
   var path = location.pathname.replace(/index\.html$/, '');
   if (path !== '/') return;
-  var ids = ['work', 'publications', 'awards', 'background'];
+  var ids = ['work', 'background', 'publications', 'awards'];
   var sections = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
   var links = Array.prototype.slice.call(sidebar.querySelectorAll('.side-nav a[data-section]'));
   var queued = false;

@@ -47,9 +47,9 @@
           <li><a href="/work/ultrabots/" aria-current="page">UltraBots</a></li>
           <li><a href="/work/phinix/">PHINIX</a></li>
       </ul>
+      <a href="/#background" data-section="background">Background</a>
       <a href="/#publications" data-section="publications">Publications</a>
       <a href="/#awards" data-section="awards">Awards &amp; honors</a>
-      <a href="/#background" data-section="background">Background</a>
     </nav>
     <div class="side-links">
       <div class="side-email"><a href="mailto:faridan3838@gmail.com">faridan3838@gmail.com</a><a href="mailto:mehrad.faridan1@ucalgary.ca">mehrad.faridan1@ucalgary.ca</a><a href="mailto:mehrad@cyber.t.u-tokyo.ac.jp">mehrad@cyber.t.u-tokyo.ac.jp</a></div>
@@ -75,6 +75,8 @@
       <p>Ultrasound haptics can create precise touch sensations in mid-air, but each device covers only a small area, which limits what you can do with it in VR. UltraBots mounts ultrasound transducer arrays on tabletop mobile robots (Sony Toio) or robotic arms. Using the headset’s hand tracking, the robots keep the arrays under the user’s hands, giving on-demand mid-air haptics across a much larger workspace. We demonstrated applications in virtual workspaces, medical training, education and entertainment.</p>
       <h2 id="role">My role</h2>
       <p>I led the project, designing and building the robot-mounted ultrasound haptics system.</p>
+      <h2 id="build">How I built it</h2>
+      <p>Each ultrasound array rides on Sony Toio robots, which track their own position on a printed mat. A Toio can only carry about 200 g, so I 3D-printed a base with castors to take the array’s weight. A Node.js server talks to the robots over Bluetooth and reports their positions to a Unity app, which reads the user’s hands from the Quest’s hand tracking, drives the robots to stay under them, and tells the arrays which shapes to render in mid-air.</p>
       <h2 id="videos">Videos</h2>
       <div class="videos"><div class="video"><span>Preview</span><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/jMYAQzzQ_PI" title="UltraBots preview" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div></div>
       <h2 id="cite">Cite</h2>
