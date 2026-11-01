@@ -102,6 +102,8 @@ img.photo { display: block; height: auto; object-fit: cover; }
 .bg-row { display: grid; grid-template-columns: 140px 1fr; gap: 20px; font-size: 15px; }
 .bg-row .when { color: var(--muted); font-variant-numeric: tabular-nums; }
 .bg-row .sub { color: var(--muted); display: block; }
+#awards .year-start:not(:first-child) { margin-top: 10px; }
+@media (max-width: 600px) { #awards .bg-row:not(.year-start) .when { display: none; } }
 
 footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
 footer .contact { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 0; }
