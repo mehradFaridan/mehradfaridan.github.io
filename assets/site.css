@@ -117,6 +117,8 @@ img.photo { display: block; height: auto; object-fit: cover; }
 .tl-edu { margin: 30px 0 0; font-size: 15px; color: var(--muted); }
 
 footer { border-top: 1px solid var(--line); padding-block: 22px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+footer .contact { display: flex; flex-direction: column; gap: 4px; }
+footer .contact a { margin-left: 2px; }
 
 .lede { margin: 0 0 36px; text-wrap: balance; }
 .flip-verb { background: none; border: 0; padding: 0; margin: 0; font: inherit; line-height: inherit; color: var(--accent); cursor: pointer; vertical-align: baseline; }
