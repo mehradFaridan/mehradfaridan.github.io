@@ -227,6 +227,21 @@ async function start() {
 
   // ---------- scroll → which shapes, and how far between them ----------
   let segA = 'idle', segB = 'idle', mix = 0, mixTarget = 0, visible = 0, visibleTarget = 0;
+  let mode = 'init', speed = 0.06;
+  const onCard = document.querySelector('#work .project.is-on');
+  let verbKey = (onCard || cards[0]).id.replace(/^w-/, '');
+  function morphTo(k) {
+    const cur = mix > 0.5 ? segB : segA;
+    if (cur === k && mixTarget === 1 && segB === k) return;
+    from.set(shapes[cur]); to.set(shapes[k]);
+    geo.attributes.position.needsUpdate = true; geo.attributes.target.needsUpdate = true;
+    segA = cur; segB = k; mix = 0; mixTarget = 1; speed = 0.06;
+    if (label) label.textContent = names[k] || '';
+  }
+  document.addEventListener('verbchange', (e) => {
+    verbKey = e.detail.id.replace(/^w-/, '');
+    if (mode === 'verb') morphTo(verbKey);
+  });
   function setSegment(a, b) {
     if (a === segA && b === segB) return;
     from.set(shapes[a]); to.set(shapes[b]);
@@ -239,8 +254,13 @@ async function start() {
     const wr = work.getBoundingClientRect();
     visibleTarget = wr.top < innerHeight * 0.9 && wr.bottom > innerHeight * 0.25 ? 1 : 0;
     let a, b, t;
-    if (anchor < centers[0]) { a = 'idle'; b = keys[0]; t = 1 - Math.min(1, (centers[0] - anchor) / (innerHeight * 0.6)); }
-    else if (anchor >= centers[centers.length - 1]) { a = keys[keys.length - 1]; b = a; t = 0; }
+    if (anchor < centers[0]) {
+      // above the first card the headline is in view: follow its rotating word
+      if (mode !== 'verb') { mode = 'verb'; morphTo(verbKey); }
+      return;
+    }
+    mode = 'scroll'; speed = 0.12;
+    if (anchor >= centers[centers.length - 1]) { a = keys[keys.length - 1]; b = a; t = 0; }
     else {
       let i = 0; while (anchor >= centers[i + 1]) i++;
       a = keys[i]; b = keys[i + 1]; t = (anchor - centers[i]) / (centers[i + 1] - centers[i]);
@@ -262,7 +282,7 @@ async function start() {
   document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) requestAnimationFrame(loop); });
   const t0 = performance.now();
   function frame(time) {
-    mix += (mixTarget - mix) * 0.12; visible += (visibleTarget - visible) * 0.08;
+    mix += (mixTarget - mix) * speed; visible += (visibleTarget - visible) * 0.08;
     uniforms.uMix.value = mix; uniforms.uTime.value = time;
     cloud.rotation.y = Math.sin(time * 0.25) * 0.5 + pointer.x * 0.6;
     const tx = (tilt[segA] ?? 0.2) * (1 - mix) + (tilt[segB] ?? 0.2) * mix;

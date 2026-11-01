@@ -287,6 +287,8 @@
     roll.style.width = Math.ceil(widthOf(verb)) + 'px';
     btn.setAttribute('aria-label', verb + '. Go to this work');
     items.forEach(function (el, k) { el.classList.toggle('is-on', k === i); });
+    // Lets the point-cloud companion morph in step with the word.
+    document.dispatchEvent(new CustomEvent('verbchange', { detail: { id: item.id } }));
   }
   function tick() { if (!paused) show(i + 1, true); }
   function start() { stop(); timer = setInterval(tick, reduce ? 4000 : 2600); }
