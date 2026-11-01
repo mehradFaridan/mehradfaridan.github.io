@@ -288,3 +288,12 @@ section, .project { scroll-margin-top: 84px; }
   .sidebar { gap: 18px; }
   .side-nav a { padding-top: 4px; padding-bottom: 4px; }
 }
+
+/* Point-cloud companion: a third column on wide screens that reshapes into each project while you scroll Selected work */
+.companion { display: none; }
+@media (min-width: 1200px) {
+  .shell { max-width: 1400px; grid-template-columns: 250px minmax(0, 680px) minmax(280px, 1fr); gap: 56px; }
+  .companion { display: flex; flex-direction: column; justify-content: center; position: sticky; top: 0; height: 100vh; opacity: 0; pointer-events: none; }
+  .companion canvas { display: block; width: 100%; aspect-ratio: 1 / 1.15; max-height: 72vh; }
+  .companion-label { margin: 6px 0 0; min-height: 1.5em; text-align: center; font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
+}
