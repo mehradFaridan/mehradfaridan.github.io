@@ -225,51 +225,25 @@ async function start() {
   new ResizeObserver(resize).observe(canvas);
   resize();
 
-  // ---------- scroll → which shapes, and how far between them ----------
+  // ---------- the headline word decides the shape; scrolling only fades the column in and out ----------
   let segA = 'idle', segB = 'idle', mix = 0, mixTarget = 0, visible = 0, visibleTarget = 0;
-  let mode = 'init', speed = 0.06;
-  const onCard = document.querySelector('#work .project.is-on');
-  let verbKey = (onCard || cards[0]).id.replace(/^w-/, '');
-  function morphTo(k) {
-    const cur = mix > 0.5 ? segB : segA;
-    if (cur === k && mixTarget === 1 && segB === k) return;
-    from.set(shapes[cur]); to.set(shapes[k]);
-    geo.attributes.position.needsUpdate = true; geo.attributes.target.needsUpdate = true;
-    segA = cur; segB = k; mix = 0; mixTarget = 1; speed = 0.06;
-    if (label) label.textContent = names[k] || '';
-  }
-  document.addEventListener('verbchange', (e) => {
-    verbKey = e.detail.id.replace(/^w-/, '');
-    if (mode === 'verb') morphTo(verbKey);
-  });
+  const speed = 0.06;
   function setSegment(a, b) {
-    if (a === segA && b === segB) return;
     from.set(shapes[a]); to.set(shapes[b]);
     geo.attributes.position.needsUpdate = true; geo.attributes.target.needsUpdate = true;
     segA = a; segB = b;
   }
+  function morphTo(k) {
+    const cur = mix > 0.5 ? segB : segA;
+    if (cur === k) return;
+    setSegment(cur, k); mix = 0; mixTarget = 1;
+    if (label) label.textContent = names[k] || '';
+  }
+  document.addEventListener('verbchange', (e) => morphTo(e.detail.id.replace(/^w-/, '')));
+  morphTo((document.querySelector('#work .project.is-on') || cards[0]).id.replace(/^w-/, ''));
   function onScroll() {
-    const anchor = innerHeight * 0.45;
-    const centers = cards.map((c) => { const r = c.getBoundingClientRect(); return r.top + r.height / 2; });
     const wr = work.getBoundingClientRect();
     visibleTarget = wr.top < innerHeight * 0.9 && wr.bottom > innerHeight * 0.25 ? 1 : 0;
-    let a, b, t;
-    if (anchor < centers[0]) {
-      // above the first card the headline is in view: follow its rotating word
-      if (mode !== 'verb') { mode = 'verb'; morphTo(verbKey); }
-      return;
-    }
-    mode = 'scroll'; speed = 0.12;
-    if (anchor >= centers[centers.length - 1]) { a = keys[keys.length - 1]; b = a; t = 0; }
-    else {
-      let i = 0; while (anchor >= centers[i + 1]) i++;
-      a = keys[i]; b = keys[i + 1]; t = (anchor - centers[i]) / (centers[i + 1] - centers[i]);
-    }
-    // hold each shape while its card is centred, morph in the space between cards
-    t = Math.min(1, Math.max(0, (t - 0.3) / 0.4));
-    setSegment(a, b); mixTarget = t;
-    const current = t < 0.5 ? a : b;
-    if (label) label.textContent = current === 'idle' ? '' : names[current] || '';
   }
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
@@ -294,5 +268,5 @@ async function start() {
   function loop() { if (!running) return; frame((performance.now() - t0) / 1000); requestAnimationFrame(loop); }
   requestAnimationFrame(loop);
   // For checking stills: show one project fully formed.
-  window.__companion = { show(k) { setSegment(k, k); mix = mixTarget = 0; visible = visibleTarget = 1; frame(2); }, keys };
+  window.__companion = { show(k) { setSegment(k, k); mix = mixTarget = 0; visible = visibleTarget = 1; frame(2); }, keys, state: () => ({ segA, segB, mix: +mix.toFixed(2) }) };
 }
