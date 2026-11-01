@@ -205,6 +205,20 @@ async function start() {
     ])
   };
   const tilt = { idle: 0.15, chameleoncontrol: 0.05, 'scalable-academy': 0.62, holobots: 0.22, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5 };
+  // ---------- annotations: [text, point] in the cloud's space, with the same transforms as the shapes ----------
+  const at = (x, y, z, o = {}) => v(x, y, z).applyMatrix4(new THREE.Matrix4().compose(o.pos || v(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(o.rx || 0, o.ry || 0, o.rz || 0)), v(o.s || 1, o.s || 1, o.s || 1)));
+  const headset = { pos: v(0, 0.1, 0), ry: -0.6, s: 1.3 };
+  const notes = {
+    chameleoncontrol: [['ZED Mini stereo camera', at(0, 0.52, 0.55, headset)], ['Meta Quest 2', at(0.36, 0.05, 0.38, headset)], ['iPad Air showing the instructor', at(0, -0.25, 0.58, headset), [-1, 0.45, 80]]],
+    'scalable-academy': [['Each student as a live 3D pointcloud', at(0.85, 0.3, -0.47)], ['Massage table', at(-0.85, -0.25, 0.7)]],
+    holobots: [['Remote person’s hologram', at(1.0, 0.78, 0)], ['Local person', at(-1.0, 0.78, 0)], ['Sony Toio robot', at(0.12, 0.13, 0.05), [0.15, 1, 80]]],
+    video2mr: [['2D tutorial video', at(-0.75, 0.62, -0.45), [-0.3, -1, 30]], ['3D motion in mixed reality', at(0.12, 0.3, 0.25), [-0.25, -1, 70]], ['Azure Kinect', at(0.98, 0.1, 0.78), [0.05, -1, 55]]],
+    'sketched-reality': [['Sketched spring', at(-0.5, -0.22, 0)], ['Sony Toio robot', at(0.2, -0.32, 0)], ['Sketched pendulum', at(0.77, 0.14, 0.1)]],
+    'augmented-conversation': [['HoloLens 2', at(0, 0.44, 0.27, { pos: v(-0.7, -0.35, 0), ry: 0.5 })], ['Keyword tags', at(0.2, 0.84, -0.1)]],
+    ultrabots: [['Mid-air touch', at(0.25, 0.05, 0)], ['Ultrasound array', at(0.5, -0.62, 0.3)], ['Sony Toio robot', at(-0.15, -0.9, 0.28)]],
+    phinix: [['AI cameras', at(0.27, 0.86, 0.12)], ['Haptic bracelet', at(0.62, -0.2, 0)]]
+  };
+
   const keys = cards.map((c) => c.id.replace(/^w-/, ''));
   const names = Object.fromEntries(cards.map((c) => [c.id.replace(/^w-/, ''), (c.querySelector('h3') || c).childNodes[0].textContent.trim()]));
 
@@ -311,6 +325,44 @@ async function start() {
     camera.position.set(0, 0.12, camDist); camera.lookAt(0, -0.05, 0);
     aside.style.opacity = visible.toFixed(3);
     renderer.render(scene, camera);
+    placeNotes();
+  }
+  // Labels sit just outside each point, pushed away from the centre, with a thin leader line.
+  const layer = document.createElement('div'); layer.className = 'companion-notes';
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  layer.appendChild(svg); aside.appendChild(layer);
+  let shown = null, els = [];
+  const tmp = new THREE.Vector3();
+  function placeNotes() {
+    const k = mix > 0.5 ? segB : segA;
+    if (k !== shown) {
+      shown = k; svg.innerHTML = ''; layer.querySelectorAll('span').forEach((n) => n.remove());
+      els = (notes[k] || []).map(([text, p, dir]) => {
+        const span = document.createElement('span'); span.textContent = text; layer.appendChild(span);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line'), dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('r', 2); svg.append(line, dot);
+        return { p, dir, span, line, dot };
+      });
+    }
+    const settled = segA === segB ? 1 : THREE.MathUtils.smoothstep(mix, 0.85, 1);
+    layer.style.opacity = settled.toFixed(3);
+    if (!settled) return;
+    const W = aside.clientWidth, cw = canvas.clientWidth, ch = canvas.clientHeight, ox = canvas.offsetLeft, oy = canvas.offsetTop;
+    layer.style.left = 0; layer.style.top = 0; svg.setAttribute('width', W); svg.setAttribute('height', aside.clientHeight);
+    cloud.updateMatrixWorld();
+    for (const e of els) {
+      tmp.copy(e.p).applyMatrix4(cloud.matrixWorld).project(camera);
+      const x = ox + (tmp.x + 1) / 2 * cw, y = oy + (1 - tmp.y) / 2 * ch;
+      // Pushed straight out from the centre, unless the note names its own direction and length.
+      let dx = x - (ox + cw / 2), dy = y - (oy + ch / 2), len = Math.hypot(dx, dy) || 1, rx = 34, ry = 26;
+      if (e.dir) { [dx, dy] = e.dir; len = Math.hypot(dx, dy); rx = ry = e.dir[2]; }
+      const lx = x + dx / len * rx, ly = y + dy / len * ry;
+      const left = dx < 0, w = e.span.offsetWidth;
+      const tx = Math.min(Math.max(left ? lx - w - 4 : lx + 4, 0), W - w);
+      e.span.style.transform = `translate(${tx.toFixed(1)}px, ${(ly - 8).toFixed(1)}px)`;
+      e.dot.setAttribute('cx', x); e.dot.setAttribute('cy', y);
+      e.line.setAttribute('x1', x); e.line.setAttribute('y1', y); e.line.setAttribute('x2', lx); e.line.setAttribute('y2', ly);
+    }
   }
   function loop() { if (!running) return; frame((performance.now() - t0) / 1000); requestAnimationFrame(loop); }
   requestAnimationFrame(loop);
