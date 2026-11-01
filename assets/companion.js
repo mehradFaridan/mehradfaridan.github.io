@@ -67,6 +67,20 @@ async function start() {
     const sc = (o.s || 1) ** 2;
     return flat.map((p) => ({ area: p.area * sc * (p.weight || 1), sample: () => p.sample().applyMatrix4(m) }));
   }
+  // Keep only points inside an axis-aligned box (used to crop the 2D video figure to its frame).
+  function clip(parts, lo, hi) {
+    return parts.flat(Infinity).map((p) => ({ area: p.area * 0.6, sample: () => {
+      for (let k = 0; k < 40; k++) { const q = p.sample(); if (q.x >= lo.x && q.x <= hi.x && q.y >= lo.y && q.y <= hi.y) return q; }
+      return v(lo.x + rnd() * (hi.x - lo.x), lo.y, lo.z); } }));
+  }
+  // Horizontal scan bands, so a body reads as a hologram.
+  function holo(parts, bands, duty) {
+    return parts.flat(Infinity).map((p) => ({ area: p.area * duty, sample: () => {
+      for (let k = 0; k < 40; k++) { const q = p.sample(); if (((q.y + 10) * bands) % 1 < duty) return q; }
+      return p.sample(); } }));
+  }
+  function flatten(parts, z) { return parts.flat(Infinity).map((p) => ({ area: p.area, sample: () => { const q = p.sample(); q.z = z + (rnd() - 0.5) * 0.01; return q; } })); }
+  const arc = (c, R, a0, a1, t) => ({ area: R * (a1 - a0) * t * 6, sample: () => { const a = a0 + rnd() * (a1 - a0), j = (rnd() - 0.5) * t; return v(Math.cos(a) * (R + j), Math.sin(a) * (R + j), (rnd() - 0.5) * t).add(c); } });
   function weight(parts, w) { return parts.flat(Infinity).map((p) => ({ area: p.area * w, sample: p.sample })); }
   function build(parts) {
     const flat = parts.flat(Infinity), total = flat.reduce((s, p) => s + p.area, 0), out = new Float32Array(N * 3);
@@ -98,15 +112,26 @@ async function start() {
   function bust(o) {
     return group([P.sphere(v(0, 0.42, 0), 0.24), P.capsule(v(0, 0.05, 0), v(0, 0.18, 0), 0.09), P.capsule(v(-0.3, -0.08, 0), v(0.3, -0.08, 0), 0.13)], o);
   }
+  const pose = () => [
+    P.sphere(v(0, 1.55, 0), 0.15), P.capsule(v(0, 1.0, 0), v(0, 1.35, 0), 0.17),
+    P.capsule(v(-0.18, 1.3, 0), v(-0.55, 1.75, 0), 0.06), P.capsule(v(0.18, 1.3, 0), v(0.55, 1.75, 0), 0.06),
+    P.capsule(v(-0.08, 0.95, 0), v(-0.08, 0.05, 0), 0.07), P.capsule(v(0.08, 0.95, 0), v(0.5, 0.45, 0.05), 0.07)
+  ];
   const toio = (x, z, s = 1) => P.box(v(x, 0.06 * s, z), [0.2 * s, 0.12 * s, 0.2 * s]);
 
   // ---------- the eight projects (keys match the card ids) ----------
   const shapes = {
     idle: build([P.sphere(v(0, 0, 0), 1.05), weight([P.sphere(v(0, 0, 0), 0.6)], 0.4)]),
-    chameleoncontrol: build([
-      hand({ pos: v(-0.32, -0.15, 0.15), rz: 0.18, s: 1.1 }),
-      weight(hand({ pos: v(0.32, 0.05, -0.25), rz: -0.12, ry: 0.15, s: 1.1 }), 0.55)
-    ]),
+    chameleoncontrol: build([group([
+      weight([P.sphere(v(0, 0, 0), 0.42)], 0.55),
+      weight([P.capsule(v(0, -0.45, 0), v(0, -0.72, 0), 0.16), P.capsule(v(-0.55, -0.82, -0.02), v(0.55, -0.82, -0.02), 0.13)], 0.5),
+      P.box(v(0, 0.05, 0.38), [0.72, 0.4, 0.26]),
+      weight([P.torus(v(0, 0.06, 0), 0.44, 0.03)], 0.8),
+      P.box(v(0, 0.05, 0.56), [0.86, 0.62, 0.035]),
+      weight([P.sphere(v(-0.15, 0.15, 0.59), 0.04), P.sphere(v(0.15, 0.15, 0.59), 0.04), arc(v(0, 0.04, 0.59), 0.14, Math.PI * 1.15, Math.PI * 1.85, 0.025)], 3.0),
+      P.box(v(0, 0.42, 0.55), [0.32, 0.08, 0.09]),
+      weight([P.sphere(v(-0.09, 0.42, 0.6), 0.028), P.sphere(v(0.09, 0.42, 0.6), 0.028)], 2.0)
+    ], { pos: v(0, 0.12, 0), ry: -0.6, s: 1.3 })]),
     'scalable-academy': build([0, 1, 2].flatMap((cx) => [0, 1].flatMap((cz) => group([
       P.sphere(v(0, 0.78, -0.02), 0.09),
       P.capsule(v(0, 0.45, -0.1), v(0, 0.68, -0.04), 0.1),
@@ -116,19 +141,24 @@ async function start() {
       P.capsule(v(0, 0.36, 0.1), v(0, 0.36, 0.38), 0.045)
     ], { pos: v(-0.85 + cx * 0.85, -0.6, -0.45 + cz * 0.9), s: 1.15 })))),
     holobots: build([
-      weight(person({ pos: v(-0.55, -1.0, -0.2), s: 0.85, ry: 0.4 }), 0.75),
-      weight([P.box(v(0.25, -0.62, 0), [1.3, 0.04, 0.9])], 0.45),
-      group([toio(0, 0), toio(0.45, 0.25), toio(-0.05, 0.4)], { pos: v(0.2, -0.6, -0.15), s: 2.0 }),
-      P.box(v(0.65, -0.4, 0.15), [0.32, 0.4, 0.32])
+      holo([
+        P.sphere(v(0, 0.78, -0.4), 0.2),
+        P.capsule(v(0, 0.12, -0.45), v(0, 0.5, -0.42), 0.26),
+        P.capsule(v(-0.3, 0.45, -0.42), v(-0.42, 0.02, -0.15), 0.07), P.capsule(v(-0.42, 0.02, -0.15), v(-0.36, -0.42, 0.15), 0.065),
+        P.capsule(v(0.3, 0.45, -0.42), v(0.42, 0.02, -0.15), 0.07), P.capsule(v(0.42, 0.02, -0.15), v(0.36, -0.42, 0.15), 0.065),
+        P.sphere(v(-0.36, -0.46, 0.17), 0.08), P.sphere(v(0.36, -0.46, 0.17), 0.08)
+      ], 14, 0.45),
+      weight([P.box(v(0, -0.7, 0.05), [2.0, 0.04, 1.1])], 0.35),
+      group([toio(-0.36, 0.17, 1.6), toio(0.36, 0.17, 1.6)], { pos: v(0, -0.68, 0) }),
+      P.box(v(0, -0.52, 0.32), [0.34, 0.3, 0.3])
     ]),
     video2mr: build([
-      weight([P.frame(v(-0.55, 0.1, -0.4), 1.0, 0.75, 0.03)], 1.3),
-      weight([P.box(v(-0.55, 0.1, -0.42), [0.96, 0.71, 0.005])], 0.25),
-      group([
-        P.sphere(v(0, 1.55, 0), 0.15), P.capsule(v(0, 1.0, 0), v(0, 1.35, 0), 0.17),
-        P.capsule(v(-0.18, 1.3, 0), v(-0.55, 1.75, 0), 0.06), P.capsule(v(0.18, 1.3, 0), v(0.55, 1.75, 0), 0.06),
-        P.capsule(v(-0.08, 0.95, 0), v(-0.08, 0.05, 0), 0.07), P.capsule(v(0.08, 0.95, 0), v(0.5, 0.45, 0.05), 0.07)
-      ], { pos: v(0.45, -0.95, 0.35), s: 0.8 })
+      weight([P.frame(v(-0.75, 0.2, -0.45), 0.9, 0.8, 0.03)], 1.3),
+      weight(clip(flatten(group(pose(), { pos: v(-0.75, -0.55, 0), s: 0.62 }), -0.45), v(-1.18, -0.18, -1), v(-0.32, 0.58, 1)), 0.9),
+      group(pose(), { pos: v(0.12, -0.95, 0.25), s: 0.8 }),
+      [0, 1, 2].map((i) => { const a = i / 3 * Math.PI * 2 + 0.4; return P.capsule(v(0.98, -0.05, 0.78), v(0.98 + Math.cos(a) * 0.28, -0.95, 0.78 + Math.sin(a) * 0.28), 0.013); }),
+      group([P.box(v(0, 0.08, 0), [0.34, 0.09, 0.12]), P.sphere(v(0.07, 0.08, 0.065), 0.025), P.capsule(v(0, 0.0, 0), v(0, 0.04, 0), 0.03)], { pos: v(0.98, -0.05, 0.78), ry: -2.1, s: 1.6 }),
+      weight([P.capsule(v(0.9299999999999999, 0.03, 0.73), v(0.12, 0.45, 0.25), 0.004), P.capsule(v(0.9299999999999999, 0.03, 0.73), v(0.15, -0.9, 0.25), 0.004)], 0.5)
     ]),
     'sketched-reality': build([
       P.box(v(-1.05, -0.2, 0), [0.06, 0.9, 0.9]),
@@ -157,7 +187,7 @@ async function start() {
       P.sphere(v(-0.27, 0.75, 0.12), 0.07), P.sphere(v(0.27, 0.75, 0.12), 0.07), P.sphere(v(0, 0.75, 0.12), 0.05)
     ])
   };
-  const tilt = { idle: 0.15, chameleoncontrol: 0.1, 'scalable-academy': 0.62, holobots: 0.38, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5 };
+  const tilt = { idle: 0.15, chameleoncontrol: 0.05, 'scalable-academy': 0.62, holobots: 0.3, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5 };
   const keys = cards.map((c) => c.id.replace(/^w-/, ''));
   const names = Object.fromEntries(cards.map((c) => [c.id.replace(/^w-/, ''), (c.querySelector('h3') || c).childNodes[0].textContent.trim()]));
 
