@@ -90,7 +90,6 @@ img.photo { display: block; height: auto; object-fit: cover; }
 .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
 .pill { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--award); color: var(--award-ink); }
 .project p { font-size: 15px; }
-.role { color: var(--muted); font-size: 14px; }
 
 .pubs { display: flex; flex-direction: column; gap: 18px; }
 .pub { display: grid; grid-template-columns: 44px 1fr; gap: 12px; font-size: 15px; }
