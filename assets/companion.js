@@ -137,6 +137,8 @@ async function start() {
   ];
   // A point on a globe of radius R, turned so longitude lon0 faces the camera.
   const geo3 = (lat, lon, R, lon0) => { const f = lat * Math.PI / 180, l = (lon - lon0) * Math.PI / 180; return v(Math.cos(f) * Math.sin(l) * R, Math.sin(f) * R, Math.cos(f) * Math.cos(l) * R); };
+  // The Background globe faces the middle of the Tokyo–Calgary flight.
+  const globe = { lon0: -168, lat0: 0.75 };
   const toio = (x, z, s = 1) => P.box(v(x, 0.06 * s, z), [0.2 * s, 0.12 * s, 0.2 * s]);
 
   // ---------- the eight projects (keys match the card ids) ----------
@@ -206,17 +208,19 @@ async function start() {
       hand({ pos: v(0.05, 0.45, 0), rz: -1.35, s: 0.95 })
     ]),
     // ---------- the later sections ----------
-    // Background: a globe with an arc from Calgary to Tokyo.
+    // Background: a globe turned to face the North Pacific, with a trail from Tokyo to Calgary.
     background: (() => {
-      const R = 0.95, lon0 = -170, cal = geo3(51.05, -114.07, R, lon0), tok = geo3(35.68, 139.69, R, lon0);
-      const arcPath = { area: 0.5, sample: () => { const t = rnd(); return cal.clone().lerp(tok, t).normalize().multiplyScalar(R + Math.sin(Math.PI * t) * 0.28).add(randDir().multiplyScalar(0.008)); } };
-      return build([
-        weight([P.sphere(v(0, 0, 0), R)], 0.08),
-        [-60, -30, 0, 30, 60].map((lat) => weight([P.ring(v(0, Math.sin(lat * Math.PI / 180) * R, 0), Math.cos(lat * Math.PI / 180) * R, 'y', 0.012)], 2.2)),
-        [0, 1, 2, 3, 4, 5].map((i) => group([weight([P.ring(v(0, 0, 0), R, 'z', 0.012)], 2.2)], { ry: i * Math.PI / 6 })),
-        weight([arcPath], 1.8),
-        weight([P.sphere(cal, 0.05), P.sphere(tok, 0.05)], 2.5)
-      ]);
+      const R = 0.95, tok = geo3(35.68, 139.69, R, globe.lon0), cal = geo3(51.05, -114.07, R, globe.lon0);
+      const path = (t) => tok.clone().lerp(cal, t).normalize().multiplyScalar(R + Math.sin(Math.PI * t) * 0.2).add(v(0, Math.sin(Math.PI * t) * 0.28, 0));
+      // Like a comet's tail, the trail is faint and thin at Tokyo and grows denser and wider toward Calgary.
+      const arcPath = { area: 0.5, sample: () => { const t = Math.sqrt(rnd()); return path(t).add(randDir().multiplyScalar(0.004 + t * 0.02)); } };
+      return build([group([
+        weight([P.sphere(v(0, 0, 0), R)], 0.06),
+        [-60, -30, 0, 30, 60].map((lat) => weight([P.ring(v(0, Math.sin(lat * Math.PI / 180) * R, 0), Math.cos(lat * Math.PI / 180) * R, 'y', 0.01)], 1.6)),
+        [0, 1, 2, 3, 4, 5].map((i) => group([weight([P.ring(v(0, 0, 0), R, 'z', 0.01)], 1.6)], { ry: i * Math.PI / 6 })),
+        weight([arcPath], 3.2),
+        weight([P.sphere(tok, 0.035)], 2), weight([P.sphere(cal, 0.075)], 4)
+      ], { rx: globe.lat0 })]);
     })(),
     // Publications: a fanned stack of papers, the top one in two columns.
     publications: build([
@@ -251,7 +255,7 @@ async function start() {
       P.sphere(v(-0.27, 0.75, 0.12), 0.07), P.sphere(v(0.27, 0.75, 0.12), 0.07), P.sphere(v(0, 0.75, 0.12), 0.05)
     ])
   };
-  const tilt = { idle: 0.15, chameleoncontrol: 0.05, 'scalable-academy': 0.62, holobots: 0.22, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5, background: 0.5, publications: 0.05, awards: 0.15, skills: 0.3 };
+  const tilt = { idle: 0.15, chameleoncontrol: 0.05, 'scalable-academy': 0.62, holobots: 0.22, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5, background: 0.1, publications: 0.05, awards: 0.15, skills: 0.3 };
   // ---------- annotations: [text, point] in the cloud's space, with the same transforms as the shapes ----------
   const at = (x, y, z, o = {}) => v(x, y, z).applyMatrix4(new THREE.Matrix4().compose(o.pos || v(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(o.rx || 0, o.ry || 0, o.rz || 0)), v(o.s || 1, o.s || 1, o.s || 1)));
   const headset = { pos: v(0, 0.1, 0), ry: -0.6, s: 1.3 };
@@ -263,7 +267,7 @@ async function start() {
     'sketched-reality': [['Sketched spring', at(-0.5, -0.22, 0), [-0.4, -1, 60]], ['Sony Toio robot', at(0.2, -0.32, 0), [0.2, 1, 75]], ['Sketched pendulum', at(0.77, 0.14, 0.1), [0.5, -1, 50]]],
     'augmented-conversation': [['HoloLens 2', at(0, 0.44, 0.27, { pos: v(-0.7, -0.35, 0), ry: 0.5 }), [-0.3, -1, 55]], ['Keyword tags', at(0.2, 0.84, -0.1), [0, -1, 45]]],
     ultrabots: [['Mid-air touch', at(0.25, 0.05, 0), [1, -0.2, 45]], ['Ultrasound array', at(0.5, -0.62, 0.3), [0.5, 1, 85]], ['Sony Toio robot', at(-0.15, -0.9, 0.28), [0, 1, 50]]],
-    background: [['Calgary', geo3(51.05, -114.07, 0.95, -170), [1, 0.4, 40]], ['Tokyo', geo3(35.68, 139.69, 0.95, -170), [-1, 0.4, 40]]],
+    background: [['Tokyo', geo3(35.68, 139.69, 0.95, globe.lon0).applyAxisAngle(v(1, 0, 0), globe.lat0), [-1, 0.5, 40]], ['Calgary', geo3(51.05, -114.07, 0.95, globe.lon0).applyAxisAngle(v(1, 0, 0), globe.lat0), [1, 0.5, 40]]],
     phinix: [['AI cameras', at(0.27, 0.86, 0.12), [0.2, -1, 45]], ['Haptic bracelet', at(0.62, -0.2, 0), [0.4, 1, 60]]]
   };
 
