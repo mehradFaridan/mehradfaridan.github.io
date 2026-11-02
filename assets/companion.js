@@ -1,5 +1,6 @@
 // Point-cloud companion: on wide screens, a cloud of points in the right-hand column
 // reshapes into each project as you scroll through Selected work.
+// On a project page (aside[data-project]) it just forms that project's shape.
 // Loads three.js only when the column is visible and the visitor allows motion.
 
 const WIDE = '(min-width: 1200px)';
@@ -7,8 +8,9 @@ const aside = document.querySelector('.companion');
 const work = document.getElementById('work');
 const cards = Array.from(document.querySelectorAll('#work a.project'));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fixed = aside && aside.dataset.project;
 
-if (aside && work && cards.length && !reduced) {
+if (aside && (fixed || (work && cards.length)) && !reduced) {
   if (matchMedia(WIDE).matches) start();
   else matchMedia(WIDE).addEventListener('change', function once(e) { if (e.matches) { start(); this.removeEventListener('change', once); } });
 }
@@ -209,17 +211,17 @@ async function start() {
   const at = (x, y, z, o = {}) => v(x, y, z).applyMatrix4(new THREE.Matrix4().compose(o.pos || v(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(o.rx || 0, o.ry || 0, o.rz || 0)), v(o.s || 1, o.s || 1, o.s || 1)));
   const headset = { pos: v(0, 0.1, 0), ry: -0.6, s: 1.3 };
   const notes = {
-    chameleoncontrol: [['ZED Mini stereo camera', at(0, 0.52, 0.55, headset)], ['Meta Quest 2', at(0.36, 0.05, 0.38, headset)], ['iPad Air showing the instructor', at(0, -0.25, 0.58, headset), [-1, 0.5]]],
-    'scalable-academy': [['Each student as a live 3D pointcloud', at(0.85, 0.3, -0.47)], ['Massage table', at(-0.85, -0.25, 0.7)]],
-    holobots: [['Remote person’s hologram', at(1.0, 0.78, 0)], ['Local person', at(-1.0, 0.78, 0)], ['Sony Toio robot', at(0.12, 0.13, 0.05), [0.25, 1, 75]]],
-    video2mr: [['2D tutorial video', at(-0.75, 0.62, -0.45), [-0.2, -1]], ['3D motion in mixed reality', at(0.12, -0.5, 0.25), [0.1, 1, 70]], ['Azure Kinect', at(0.98, 0.1, 0.78), [0.1, -1]]],
-    'sketched-reality': [['Sketched spring', at(-0.5, -0.22, 0)], ['Sony Toio robot', at(0.2, -0.32, 0)], ['Sketched pendulum', at(0.77, 0.14, 0.1)]],
-    'augmented-conversation': [['HoloLens 2', at(0, 0.44, 0.27, { pos: v(-0.7, -0.35, 0), ry: 0.5 })], ['Keyword tags', at(0.2, 0.84, -0.1)]],
-    ultrabots: [['Mid-air touch', at(0.25, 0.05, 0)], ['Ultrasound array', at(0.5, -0.62, 0.3)], ['Sony Toio robot', at(-0.15, -0.9, 0.28)]],
-    phinix: [['AI cameras', at(0.27, 0.86, 0.12)], ['Haptic bracelet', at(0.62, -0.2, 0)]]
+    chameleoncontrol: [['ZED Mini stereo camera', at(0, 0.52, 0.55, headset), [0, -1, 45]], ['Meta Quest 2', at(0.36, 0.05, 0.38, headset), [1, -0.3, 45]], ['iPad Air showing the instructor', at(0, -0.25, 0.58, headset), [-1, 0.4, 60]]],
+    'scalable-academy': [['Each student as a live 3D pointcloud', at(0.85, 0.3, -0.47), [0.2, -1, 50]], ['Massage table', at(-0.85, -0.25, 0.7), [-0.3, 1, 55]]],
+    holobots: [['Remote person’s hologram', at(1.0, 0.2, 0), [0.3, -1, 90]], ['Local person', at(-1.0, 0.6, 0), [-0.3, -1, 45]], ['Sony Toio robot', at(0.12, 0.13, 0.05), [0.25, 1, 75]]],
+    video2mr: [['2D tutorial video', at(-0.75, 0.62, -0.45), [-0.2, -1, 40]], ['3D avatar from the video', at(0.12, 0.29, 0.25), [0, -1, 70]], ['Azure Kinect', at(0.98, 0.1, 0.78), [0.1, -1, 45]]],
+    'sketched-reality': [['Sketched spring', at(-0.5, -0.22, 0), [-0.4, -1, 60]], ['Sony Toio robot', at(0.2, -0.32, 0), [0.2, 1, 75]], ['Sketched pendulum', at(0.77, 0.14, 0.1), [0.5, -1, 50]]],
+    'augmented-conversation': [['HoloLens 2', at(0, 0.44, 0.27, { pos: v(-0.7, -0.35, 0), ry: 0.5 }), [-0.3, -1, 55]], ['Keyword tags', at(0.2, 0.84, -0.1), [0, -1, 45]]],
+    ultrabots: [['Mid-air touch', at(0.25, 0.05, 0), [1, -0.2, 45]], ['Ultrasound array', at(0.5, -0.62, 0.3), [0.5, 1, 85]], ['Sony Toio robot', at(-0.15, -0.9, 0.28), [0, 1, 50]]],
+    phinix: [['AI cameras', at(0.27, 0.86, 0.12), [0.2, -1, 45]], ['Haptic bracelet', at(0.62, -0.2, 0), [0.4, 1, 60]]]
   };
 
-  const keys = cards.map((c) => c.id.replace(/^w-/, ''));
+  const keys = fixed ? [fixed] : cards.map((c) => c.id.replace(/^w-/, ''));
   const names = Object.fromEntries(cards.map((c) => [c.id.replace(/^w-/, ''), (c.querySelector('h3') || c).childNodes[0].textContent.trim()]));
 
   // ---------- renderer ----------
@@ -298,11 +300,12 @@ async function start() {
     const cur = mix > 0.5 ? segB : segA;
     if (cur === k) return;
     setSegment(cur, k); mix = 0; mixTarget = 1;
-    if (label) label.textContent = names[k] || '';
+    if (label && !fixed) label.textContent = names[k] || '';
   }
   document.addEventListener('verbchange', (e) => morphTo(e.detail.id.replace(/^w-/, '')));
-  morphTo((document.querySelector('#work .project.is-on') || cards[0]).id.replace(/^w-/, ''));
+  morphTo(fixed || (document.querySelector('#work .project.is-on') || cards[0]).id.replace(/^w-/, ''));
   function onScroll() {
+    if (fixed) { visibleTarget = 1; return; }
     const wr = work.getBoundingClientRect();
     visibleTarget = wr.top < innerHeight * 0.9 && wr.bottom > innerHeight * 0.25 ? 1 : 0;
   }
@@ -340,9 +343,9 @@ async function start() {
       shown = k; svg.innerHTML = ''; layer.querySelectorAll('span').forEach((n) => n.remove());
       els = (notes[k] || []).map(([text, p, dir]) => {
         const span = document.createElement('span'); span.textContent = text; layer.appendChild(span);
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line'), dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        dot.setAttribute('r', 2.5); svg.append(line, dot);
-        return { p, dir, span, line, dot, w: 0, h: 0 };
+        const ns = 'http://www.w3.org/2000/svg', halo = document.createElementNS(ns, 'line'), line = document.createElementNS(ns, 'line'), dot = document.createElementNS(ns, 'circle');
+        halo.setAttribute('class', 'halo'); dot.setAttribute('r', 3.5); svg.append(halo, line, dot);
+        return { p, dir, span, halo, line, dot, w: 0, h: 0 };
       });
       for (const e of els) { e.w = e.span.offsetWidth; e.h = e.span.offsetHeight; }
     }
@@ -376,7 +379,7 @@ async function start() {
       // The leader ends at the nearest point on the label's box.
       const ex = Math.min(Math.max(e.x, e.lx), e.lx + e.w), ey = Math.min(Math.max(e.y, e.ly + 2), e.ly + e.h - 2);
       e.dot.setAttribute('cx', e.x); e.dot.setAttribute('cy', e.y);
-      e.line.setAttribute('x1', e.x); e.line.setAttribute('y1', e.y); e.line.setAttribute('x2', ex); e.line.setAttribute('y2', ey);
+      for (const l of [e.halo, e.line]) { l.setAttribute('x1', e.x); l.setAttribute('y1', e.y); l.setAttribute('x2', ex); l.setAttribute('y2', ey); }
     }
   }
   function loop() { if (!running) return; frame((performance.now() - t0) / 1000); requestAnimationFrame(loop); }
