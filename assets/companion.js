@@ -1,5 +1,5 @@
 // Point-cloud companion: on wide screens, a cloud of points in the right-hand column
-// reshapes into each project as you scroll through Selected work.
+// reshapes into each project as you scroll through Selected work, then into one shape per later section.
 // On a project page (aside[data-project]) it just forms that project's shape.
 // Loads three.js only when the column is visible and the visitor allows motion.
 
@@ -57,6 +57,10 @@ async function start() {
       const th = rnd() * 2 * Math.PI, j = (rnd() - 0.5) * (thick || 0.02);
       const p = axis === 'y' ? v(Math.cos(th) * (R + j), 0, Math.sin(th) * (R + j)) : v(Math.cos(th) * (R + j), Math.sin(th) * (R + j), 0);
       return p.add(c); } }),
+    // Surface of revolution around the y axis: r(t) for t in 0..1 between heights y0 and y1.
+    lathe: (c, y0, y1, r) => ({ area: 2 * Math.PI * (r(0) + r(0.5) + r(1)) / 3 * (y1 - y0), sample: () => {
+      const t = rnd(), th = rnd() * 2 * Math.PI, R = r(t);
+      return v(Math.cos(th) * R, y0 + t * (y1 - y0), Math.sin(th) * R).add(c); } }),
     frame: (c, w, h, t) => ({ area: 2 * (w + h) * t * 4, sample: () => {
       const side = rnd(), s = rnd() - 0.5, j = (rnd() - 0.5) * t;
       if (side < w / (w + h)) return v(s * w, (rnd() < 0.5 ? -1 : 1) * h / 2 + j, (rnd() - 0.5) * t).add(c);
@@ -131,6 +135,8 @@ async function start() {
     P.capsule(v(-0.18, 1.3, 0), v(-0.55, 1.75, 0), 0.06), P.capsule(v(0.18, 1.3, 0), v(0.55, 1.75, 0), 0.06),
     P.capsule(v(-0.08, 0.95, 0), v(-0.08, 0.05, 0), 0.07), P.capsule(v(0.08, 0.95, 0), v(0.5, 0.45, 0.05), 0.07)
   ];
+  // A point on a globe of radius R, turned so longitude lon0 faces the camera.
+  const geo3 = (lat, lon, R, lon0) => { const f = lat * Math.PI / 180, l = (lon - lon0) * Math.PI / 180; return v(Math.cos(f) * Math.sin(l) * R, Math.sin(f) * R, Math.cos(f) * Math.cos(l) * R); };
   const toio = (x, z, s = 1) => P.box(v(x, 0.06 * s, z), [0.2 * s, 0.12 * s, 0.2 * s]);
 
   // ---------- the eight projects (keys match the card ids) ----------
@@ -199,6 +205,45 @@ async function start() {
       [0.12, 0.26, 0.4].map((r, i) => weight([P.ring(v(0, -0.15 + i * 0.12, 0), r * 0.7, 'y', 0.012)], 0.35)),
       hand({ pos: v(0.05, 0.45, 0), rz: -1.35, s: 0.95 })
     ]),
+    // ---------- the later sections ----------
+    // Background: a globe with an arc from Calgary to Tokyo.
+    background: (() => {
+      const R = 0.95, lon0 = -170, cal = geo3(51.05, -114.07, R, lon0), tok = geo3(35.68, 139.69, R, lon0);
+      const arcPath = { area: 0.5, sample: () => { const t = rnd(); return cal.clone().lerp(tok, t).normalize().multiplyScalar(R + Math.sin(Math.PI * t) * 0.28).add(randDir().multiplyScalar(0.008)); } };
+      return build([
+        weight([P.sphere(v(0, 0, 0), R)], 0.08),
+        [-60, -30, 0, 30, 60].map((lat) => weight([P.ring(v(0, Math.sin(lat * Math.PI / 180) * R, 0), Math.cos(lat * Math.PI / 180) * R, 'y', 0.012)], 2.2)),
+        [0, 1, 2, 3, 4, 5].map((i) => group([weight([P.ring(v(0, 0, 0), R, 'z', 0.012)], 2.2)], { ry: i * Math.PI / 6 })),
+        weight([arcPath], 1.8),
+        weight([P.sphere(cal, 0.05), P.sphere(tok, 0.05)], 2.5)
+      ]);
+    })(),
+    // Publications: a fanned stack of papers, the top one in two columns.
+    publications: build([
+      [0, 1].map((i) => group([weight([P.frame(v(0, 0, 0), 0.85, 1.1, 0.02)], 0.6), weight([P.box(v(0, 0, 0), [0.85, 1.1, 0.004])], 0.06)], { pos: v(-0.32 + i * 0.16, 0.06 - i * 0.04, -0.3 + i * 0.15), rz: 0.24 - i * 0.12 })),
+      group([
+        weight([P.frame(v(0, 0, 0), 0.85, 1.1, 0.02)], 1.2), weight([P.box(v(0, 0, 0), [0.85, 1.1, 0.004])], 0.05),
+        weight([P.box(v(0, 0.42, 0.01), [0.6, 0.05, 0.01]), P.box(v(0, 0.33, 0.01), [0.4, 0.025, 0.01])], 2.5),
+        [-1, 1].map((c) => [...Array(8)].map((_, k) => weight([P.box(v(c * 0.2, 0.2 - k * 0.08, 0.01), [0.32, 0.02, 0.01])], 2.5)))
+      ], { pos: v(0.15, -0.08, 0.15), rz: -0.06 })
+    ]),
+    // Awards: a trophy cup with handles on a two-step base.
+    awards: build([
+      P.lathe(v(0, 0, 0), 0.05, 0.75, (t) => 0.1 + 0.4 * Math.sqrt(t)),
+      weight([P.ring(v(0, 0.75, 0), 0.5, 'y', 0.03)], 1.5),
+      [-1, 1].map((sd) => weight([arc(v(sd * 0.52, 0.45, 0), 0.17, sd > 0 ? -Math.PI / 2 : Math.PI / 2, sd > 0 ? Math.PI / 2 : Math.PI * 1.5, 0.05)], 1.4)),
+      P.capsule(v(0, -0.35, 0), v(0, 0.05, 0), 0.07),
+      P.box(v(0, -0.42, 0), [0.42, 0.1, 0.42]), P.box(v(0, -0.58, 0), [0.62, 0.22, 0.62])
+    ]),
+    // Skills: a VR headset with its strap and two controllers.
+    skills: build([
+      group([
+        P.box(v(0, 0, 0.22), [0.9, 0.48, 0.32]),
+        weight([P.box(v(0, 0, 0.03), [0.8, 0.4, 0.06])], 0.6),
+        weight([P.torus(v(0, 0, -0.25), 0.43, 0.03)], 1.6)
+      ], { pos: v(0, 0.3, 0), ry: -0.55 }),
+      [-1, 1].map((sd) => group([P.torus(v(0, 0, 0), 0.17, 0.025, 0.9), P.capsule(v(0, -0.06, 0.02), v(0, -0.48, 0.12), 0.06)], { pos: v(sd * 0.55, -0.32, 0.25), rz: sd * -0.25 }))
+    ]),
     phinix: build([
       [...Array(9)].map((_, i) => { const a = i / 9 * Math.PI * 2; return P.box(v(Math.cos(a) * 0.62, -0.2, Math.sin(a) * 0.62), [0.2, 0.22, 0.2]); }),
       weight([P.torus(v(0, -0.2, 0), 0.62, 0.05)], 0.6),
@@ -206,7 +251,7 @@ async function start() {
       P.sphere(v(-0.27, 0.75, 0.12), 0.07), P.sphere(v(0.27, 0.75, 0.12), 0.07), P.sphere(v(0, 0.75, 0.12), 0.05)
     ])
   };
-  const tilt = { idle: 0.15, chameleoncontrol: 0.05, 'scalable-academy': 0.62, holobots: 0.22, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5 };
+  const tilt = { idle: 0.15, chameleoncontrol: 0.05, 'scalable-academy': 0.62, holobots: 0.22, video2mr: 0.12, 'sketched-reality': 0.32, 'augmented-conversation': 0.12, ultrabots: 0.35, phinix: 0.5, background: 0.5, publications: 0.05, awards: 0.15, skills: 0.3 };
   // ---------- annotations: [text, point] in the cloud's space, with the same transforms as the shapes ----------
   const at = (x, y, z, o = {}) => v(x, y, z).applyMatrix4(new THREE.Matrix4().compose(o.pos || v(0, 0, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(o.rx || 0, o.ry || 0, o.rz || 0)), v(o.s || 1, o.s || 1, o.s || 1)));
   const headset = { pos: v(0, 0.1, 0), ry: -0.6, s: 1.3 };
@@ -218,11 +263,15 @@ async function start() {
     'sketched-reality': [['Sketched spring', at(-0.5, -0.22, 0), [-0.4, -1, 60]], ['Sony Toio robot', at(0.2, -0.32, 0), [0.2, 1, 75]], ['Sketched pendulum', at(0.77, 0.14, 0.1), [0.5, -1, 50]]],
     'augmented-conversation': [['HoloLens 2', at(0, 0.44, 0.27, { pos: v(-0.7, -0.35, 0), ry: 0.5 }), [-0.3, -1, 55]], ['Keyword tags', at(0.2, 0.84, -0.1), [0, -1, 45]]],
     ultrabots: [['Mid-air touch', at(0.25, 0.05, 0), [1, -0.2, 45]], ['Ultrasound array', at(0.5, -0.62, 0.3), [0.5, 1, 85]], ['Sony Toio robot', at(-0.15, -0.9, 0.28), [0, 1, 50]]],
+    background: [['Calgary', geo3(51.05, -114.07, 0.95, -170), [1, 0.4, 40]], ['Tokyo', geo3(35.68, 139.69, 0.95, -170), [-1, 0.4, 40]]],
     phinix: [['AI cameras', at(0.27, 0.86, 0.12), [0.2, -1, 45]], ['Haptic bracelet', at(0.62, -0.2, 0), [0.4, 1, 60]]]
   };
 
   const keys = fixed ? [fixed] : cards.map((c) => c.id.replace(/^w-/, ''));
   const names = Object.fromEntries(cards.map((c) => [c.id.replace(/^w-/, ''), (c.querySelector('h3') || c).childNodes[0].textContent.trim()]));
+  // Sections after Selected work, each with its own shape (keys match the section ids).
+  const sections = fixed ? [] : ['background', 'publications', 'awards', 'skills'].map((id) => document.getElementById(id)).filter(Boolean);
+  for (const el of sections) names[el.id] = el.querySelector('h2').textContent.trim();
 
   // ---------- renderer ----------
   const canvas = aside.querySelector('canvas');
@@ -302,12 +351,17 @@ async function start() {
     setSegment(cur, k); mix = 0; mixTarget = 1;
     if (label && !fixed) label.textContent = names[k] || '';
   }
-  document.addEventListener('verbchange', (e) => morphTo(e.detail.id.replace(/^w-/, '')));
-  morphTo(fixed || (document.querySelector('#work .project.is-on') || cards[0]).id.replace(/^w-/, ''));
+  // In Selected work the headline word picks the project; past it, the section in view picks the shape.
+  let project = fixed || (document.querySelector('#work .project.is-on') || cards[0]).id.replace(/^w-/, ''), section = null;
+  document.addEventListener('verbchange', (e) => { project = e.detail.id.replace(/^w-/, ''); if (!section) morphTo(project); });
+  morphTo(project);
   function onScroll() {
     if (fixed) { visibleTarget = 1; return; }
-    const wr = work.getBoundingClientRect();
-    visibleTarget = wr.top < innerHeight * 0.9 && wr.bottom > innerHeight * 0.25 ? 1 : 0;
+    visibleTarget = work.getBoundingClientRect().top < innerHeight * 0.9 ? 1 : 0;
+    const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 4;
+    let s = null;
+    for (const el of sections) if (el.getBoundingClientRect().top < innerHeight * (atEnd ? 0.95 : 0.5)) s = el.id;
+    if (s !== section) { section = s; morphTo(s || project); }
   }
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
