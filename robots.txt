@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mehradfaridan.github.io/sitemap.xml
+Sitemap: https://mehradfaridan.com/sitemap.xml
